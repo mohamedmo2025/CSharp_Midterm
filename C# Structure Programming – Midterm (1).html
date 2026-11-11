@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C# Structure Programming – Midterm</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#171923;--c:#1f2230;--ink:#dde2f0;--mut:#8791ad;--ac:#4fc1ff;--k:#c586c0;--s:#ce9178;--g:#6a9955;--ok:#4ec9b0;--no:#f48771;--ln:#343950;--code:#0f1118;--mono:"JetBrains Mono",Consolas,"Cascadia Code",monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root[data-theme=light]{--bg:#f2f4fa;--c:#fff;--ink:#1f2335;--mut:#66708a;--ac:#0b6bcb;--k:#8a2fb3;--s:#b0512a;--g:#2e7d32;--ok:#0a7d63;--no:#c62828;--ln:#d6dbe8;--code:#1b1e2b;color-scheme:light}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+*{box-sizing:border-box}
+body{margin:0;font:400 16px/1.8 Cairo,system-ui,sans-serif;background:var(--bg) radial-gradient(var(--ln) 1px,transparent 1px) 0 0/24px 24px;color:var(--ink)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--c);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;direction:ltr;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--c);border-bottom:1px solid var(--ln)}
+header b{font:700 15px var(--mono);color:var(--ac)}header i{color:var(--k);font-style:normal}
+header div{display:flex;gap:8px}
+button{font:inherit;color:inherit;cursor:pointer}
+.seg{display:flex;border:1px solid var(--ln);border-radius:6px;overflow:hidden}
+.seg button,#th{background:none;border:0;padding:0 12px;font:700 13px var(--mono)}
+#th{border:1px solid var(--ln);border-radius:6px}
+.seg .on{background:var(--ac);color:var(--bg)}
+main{max-width:740px;margin:auto;padding:16px}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.hero{direction:ltr;text-align:left;background:var(--code);border:1px solid var(--ln);border-radius:10px;padding:16px 18px;margin:4px 0 18px;font:700 clamp(13px,3.7vw,18px)/1.8 var(--mono);color:#dfe3f2;overflow-x:auto;white-space:pre}
+.hero .k{color:#c586c0}.hero .t{color:#4ec9b0}.hero .s{color:#ce9178}.hero .g{color:#6a9955;font-weight:500}
+.hero u{display:inline-block;width:.6em;height:1.1em;background:#4fc1ff;vertical-align:-.2em;animation:b 1.1s steps(2) infinite}
+@keyframes b{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.hero u{animation:none}}
+.row{display:flex;gap:14px;align-items:center;width:100%;text-align:start;background:var(--c);border:1px solid var(--ln);border-inline-start:4px solid var(--k);border-radius:8px;padding:12px 14px;margin:0 0 10px}
+.row:hover:not(:disabled){border-color:var(--ac)}
+.row:disabled{opacity:.45;cursor:default}
+.row i{font:700 14px var(--mono);color:var(--s);font-style:normal;min-width:64px;direction:ltr}
+.mut,small{color:var(--mut)}
+.back{background:none;border:0;color:var(--ac);padding:0;font:700 14px var(--mono)}
+h2{margin:6px 0;font:800 22px/1.5 Cairo,sans-serif}
+h3{margin:28px 0 8px;font:700 15px/1.6 var(--mono);color:var(--ac)}
+h3::before{content:"// ";color:var(--g)}
+.tabs{direction:ltr;display:flex;align-items:stretch;background:var(--c);border:1px solid var(--ln);border-radius:10px;margin:12px 0;overflow:hidden}
+.tabs::before{content:"";width:10px;height:10px;border-radius:50%;background:#f48771;box-shadow:16px 0 #e5c07b,32px 0 #4ec9b0;margin:0 50px 0 14px;align-self:center;flex:none}
+.tabs button{flex:1;padding:8px 4px;background:none;border:0;border-left:1px solid var(--ln);font:700 13px var(--mono);color:var(--mut)}
+.tabs .on{color:var(--ink);background:var(--bg);box-shadow:inset 0 -2px var(--ac)}
+#bd{padding:0 0 16px}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.6}
+td{border:1px solid var(--ln);padding:5px 8px;text-align:start;background:var(--c)}
+pre{direction:ltr;text-align:left;background:var(--code);color:#dfe3f2;border-radius:8px;padding:10px 0;overflow-x:auto;font:13px/1.65 var(--mono);margin:8px 0;counter-reset:n;border:1px solid var(--ln)}
+pre span{display:block;padding-right:12px;white-space:pre}
+pre span::before{counter-increment:n;content:counter(n);display:inline-block;width:2.2em;margin-right:10px;text-align:right;color:#6b7390}
+pre.out span::before{content:none}pre.out span{padding-left:14px}
+code{direction:ltr;unicode-bidi:isolate;background:var(--c);color:var(--s);border:1px solid var(--ln);border-radius:4px;padding:0 5px;font:13px var(--mono)}
+.box{background:var(--c);border:1px solid var(--ln);border-radius:10px;padding:12px;margin:8px 0}
+.stk div{text-align:center;padding:6px;border:1px solid var(--k);margin-top:-1px;font:700 14px var(--mono);background:var(--c)}
+.stk div:last-child{background:var(--k);color:var(--bg)}
+.nest div{border:1px dashed var(--ac);border-radius:8px;padding:4px 10px 10px;margin-top:6px;font:700 14px var(--mono);direction:ltr;text-align:left;color:var(--ac)}
+.en{direction:ltr;text-align:left;counter-reset:o}
+.qt{font-weight:700;font-size:17px;margin:10px 0;padding-left:10px;border-left:3px solid var(--k)}
+.o{display:flex;gap:10px;align-items:baseline;width:100%;margin:7px 0;padding:10px 12px;background:var(--c);border:1px solid var(--ln);border-radius:8px;text-align:left;direction:ltr}
+.o::before{counter-increment:o;content:counter(o,upper-alpha);font:700 12px var(--mono);color:var(--k);border:1px solid var(--ln);border-radius:4px;min-width:24px;text-align:center}
+.o:hover:not(:disabled){border-color:var(--ac)}
+.o:disabled{color:inherit;cursor:default}
+.o.ok{border:2px solid var(--ok)}.o.ok::after{content:"✓";margin-left:auto;color:var(--ok)}
+.o.no{border:2px solid var(--no)}.o.no::after{content:"✗";margin-left:auto;color:var(--no)}
+.bar{height:5px;background:var(--ln);border-radius:3px;margin-bottom:6px}.bar u{display:block;height:100%;background:var(--ac);border-radius:3px}
+.pb{background:var(--ac);color:var(--bg);border:0;border-radius:6px;padding:8px 20px;margin:12px 0;font:700 14px var(--mono)}
+details{background:var(--c);border:1px solid var(--ln);border-radius:8px;padding:6px 12px;margin-top:8px}
+summary{cursor:pointer;font-weight:700}
+.dt{margin:14px 0 0;background:none;border:1px dashed var(--ac);color:var(--ac);border-radius:6px;padding:2px 14px;font:700 13px Cairo,sans-serif}
+.dbox{margin-top:10px;padding:10px 14px;border-inline-start:3px solid var(--g);background:var(--c);border-radius:8px;direction:rtl;text-align:right;line-height:2}
+.dbox[hidden]{display:none}
+.card{background:var(--c);border:1px solid var(--ln);border-top:3px solid var(--k);border-radius:12px;padding:2px 16px 18px;margin:0 0 16px}.card h3{margin-top:14px}.card td,.card code,.card .dbox,.card .stk div{background:var(--bg)}.card .stk div:last-child{background:var(--k)}.sm{list-style:none;padding:0}.sm li{background:var(--c);border:1px solid var(--ln);border-inline-start:3px solid var(--ok);border-radius:10px;padding:8px 14px;margin:10px 0}svg{max-width:100%;color:var(--ink)}
+li{margin:4px 0}
+</style>
+</head>
+<body>
+<header><b><i>&lt;/&gt;</i> C#.Midterm</b><div><span class="seg"><button data-l="en">EN</button><button data-l="ar">ع</button></span><button id="th" aria-label="Theme">◐</button></div></header>
+<main id="m"></main>
+<script>
+const $=s=>document.querySelector(s),sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+const E=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const C=(s,o,st)=>`<pre${o?' class=out':''}${st?` style="counter-reset:n ${st-1}"`:''}>${s.split("\n").map(l=>`<span>${E(l)||" "}</span>`).join("")}</pre>`;
+const T=r=>`<table>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`;
+const U=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+const H=t=>`<h3>${t}</h3>`;
+const q=(t,c,w,e,k)=>({t,o:[c,...w.split("|")],e:e||"",k:k||""});
+const TF=(t,v,e,k)=>q(t,v?"True":"False",v?"False":"True",e,k);
+
+/* ---------- code samples ---------- */
+const K0=`using System;
+
+namespace Section1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("***");
+            Console.Write("***");
+
+            Console.ReadKey();
+        }
+    }
+}`;
+const K1=`uint x = -5;
+float xy = 5.2;
+byte xyx = 150000;
+bool xyc = True;
+int aa = 5.5;`;
+
+/* ---------- Lecture 1 questions (from Exercise 1) ---------- */
+const A=[
+q('Which of the following is a component of a computer system?','Hardware','Algorithm|Pseudocode|Flowchart','مكونات النظام: Hardware وOperating System وApplication programs وUsers.'),
+q('What does hardware provide to a computer system?','Basic computing resources','Different programming languages|Various algorithmic solutions|Several software instructions'),
+q('Which of the following is an example of hardware?','Central Processing Unit','Microsoft Windows|Google Android|Web Browser','الـ CPU والـ Memory وأجهزة الـ I/O هي Hardware. Windows وAndroid هما Operating Systems.'),
+q('What is the main role of application programs?','Define resource usage','Control computer hardware|Connect shared memory|Translate source code','الـ Application بتحدد إزاي الموارد تتستخدم لحل مشكلة المستخدم. التحكم في الـ Hardware شغل الـ OS.'),
+q('Which of the following is an application program?','Word Processor','Central Processing Unit|Computer Memory|Input Device'),
+q('What is the main role of an operating system?','Control hardware usage','Create programming languages|Design algorithmic steps|Draw graphical symbols','الـ OS بيتحكم في الـ Hardware وينسق استخدامه بين البرامج.'),
+q('Which of the following is an operating system?','Microsoft Windows','Microsoft Word|Google Chrome|Visual Studio','Word وChrome وVisual Studio كلها Applications.'),
+q('Who can be considered a user of a computer system?','Humans or machines','Programs or compilers|Processors or memories|Browsers or spreadsheets','الـ User غالباً إنسان لكن ممكن يكون آلة.'),
+q('A modern computer system consists of one or more:','CPUs or processors','Algorithms or programs|Compilers or browsers|Functions or modules'),
+q('What connects I/O devices in a computer system?','A common bus','A programming language|A structured module|A compiler program'),
+q('What is computer software?','Data or computer instructions','Physical computer components|Input and output devices|Processing and memory units','الـ Software = مجموعة برامج، والبرنامج = مجموعة تعليمات.'),
+q('What is a program?','A collection of instructions','A collection of hardware|A collection of devices|A collection of processors'),
+q('What does source code represent?','Program instructions','Hardware components|Flowchart symbols|Computer resources'),
+q('What converts source code into an executable program?','Compiler','Browser|Processor|Operating system'),
+q('What must a programmer follow when using a programming language?','Language rules','Hardware rules|Flowchart shapes|Memory locations'),
+q('Which statement about programming languages is correct?','Each has different features','All have identical purposes|One language fits every case|All have identical syntax'),
+q('What is C#?','A general-purpose language','A computer hardware device|A graphical flowchart symbol|A computer memory component'),
+q('Which platform is strongly associated with C# development?','Microsoft platform','Android platform|Linux platform|Apple platform'),
+q('Which game engine commonly uses C#?','Unity Game Engine','Android Game Engine|Windows Game Engine|Browser Game Engine'),
+q('What does IDE stand for?','Integrated Development Environment','Internal Development Engine|Integrated Design Environment|Internal Design Engine'),
+q('What is one function of an IDE?','Help write computer code','Provide physical memory|Connect computer devices|Replace computer hardware'),
+q('What is structured programming also known as?','Modular programming','Linear programming|Hardware programming|Visual programming'),
+q('In structured programming, code is divided into:','Functions or modules','Devices or processors|Programs or browsers|Inputs or outputs'),
+q('Why is structured programming easier to debug?','Tasks use separate modules','Programs use single blocks|Programs use fewer instructions|Tasks avoid computer memory'),
+q('How is unstructured programming organized?','One single block','Several separate modules|Multiple independent functions|Different reusable components'),
+q('Which programming paradigm can have code duplication?','Unstructured programming','Structured programming|Modular programming|Object-oriented programming'),
+q('What is an algorithm?','A set of specific steps','A set of computer devices|A set of programming languages|A set of graphical symbols','Algorithm = خطوات محددة (step-by-step) لحل مشكلة.'),
+q('What is pseudocode mainly intended for?','Human reading','Machine reading|Program compilation|Hardware execution','الـ Pseudocode شبه اللغة الإنجليزية، ملوش syntax ثابت ومينفعش يتعمله compile.'),
+q('Which flowchart symbol represents a decision?','Diamond','Rectangle|Terminator|Arrow'),
+q('What do arrows represent in a flowchart?','Process flow direction','Program starting point|Decision branching point|Input and output data')
+];
+/* extra Lecture 1 questions */
+const A2=[
+q('Python source code is executed directly by a(n):','Interpreter','Compiler|Linker|Flowchart','Interpreter (Python) بينفذ الكود مباشرة، وCompiler (C++) بيحوله لبرنامج تنفيذي.'),
+q('C++ source code is converted into an executable program by a(n):','Compiler','Interpreter|Browser|Pseudocode'),
+q('Which type of language is machine-oriented and requires detailed coding?','Low-level language','High-level language|Structured language|Pseudocode','مثال: LOAD / ADD / STORE. الـ High-level زي x = a + b.'),
+q('Which flowchart symbol represents input or output?','Parallelogram','Diamond|Rectangle|Terminator','Terminator = Start/Stop، Rectangle = Process، Diamond = Decision، Parallelogram = I/O.'),
+q('Which flowchart symbol represents a process (an operation)?','Rectangle','Diamond|Parallelogram|Arrow'),
+q('A phone book has 1024 pages. Halving the book each time needs at most about:','10 steps','1024 steps|512 steps|2 steps','Algorithm 3 (binary search): 2^10 = 1024 يعني 10 خطوات.'),
+q('The C# compiler compiles C# code into:','Common Intermediate Language (CIL)','Machine code directly|Pseudocode|A flowchart','والـ CIL بيحتاج .NET Framework عشان يشتغل.'),
+q('A computer needs which component to run a CIL program?','.NET Framework','Python interpreter|Android platform|A flowchart'),
+q('Earlier versions of BASIC, COBOL and FORTRAN used:','Unstructured programming','Structured programming|Modular programming|Visual programming')
+];
+
+/* ---------- Lecture 2 questions (from Exercise 2) ---------- */
+const B=[
+q('Console is a ____','Class','Method|Namespace','Console = Class جوه الـ namespace اسمه System.',K0),
+q('WriteLine() & Write() is a','Method','Class|Namespace','Write وWriteLine Methods جوه الـ class اسمه Console.',K0),
+q('System or Section1 is a','Namespace','Class|Method','System وSection1 كلاهما namespace.',K0),
+TF('The using keyword is used to include namespace in the program.',1,'using System; بتخليك تكتب Console بدل System.Console.',K0),
+TF('Output of Line 9 is the same as Line 10',0,'Line 9 (WriteLine) بيطبع *** وبعدها سطر جديد، Line 10 (Write) بيطبع *** من غير سطر جديد.',K0),
+q('________ inserts a new line in the end of the statement','WriteLine()','Write()|Both|None'),
+q('________ inserts a new line in the end of the statement','Both','WriteLine()|Write("\\n")|None','Write("\\n") بتطبع رمز السطر الجديد يدوياً فنفس النتيجة.'),
+q('________ which is the entry point for all C# programs. All programs must have that method.','Main()','HelloWorld()|Program|None'),
+q('________ makes the program wait for a key press and prevents the screen from running and closing quickly.','Console.ReadKey()','Console.WriteLine();|Console.Write();'),
+q('What is the output of the following code?','x','5|10|Error','"x" بين علامات تنصيص نص حرفي بيتطبع زي ما هو، مش قيمة المتغير.','int x = 5;\n\nx = 10;\n\nConsole.WriteLine("x");'),
+q('What is the output of the following code?','x = 10','x = 5|x = 15|error','القيمة الجديدة 10 بتعمل overwrite للقيمة 5.','int x = 5;\n\nx = 10;\n\nConsole.WriteLine("x = " + x);'),
+q('What is the output of the following code?','Error','x|x = x|none of the mentioned','المتغير x معملهوش قيمة (unassigned) فمينفعش يتستخدم.','int x;\n\nConsole.WriteLine("x = " + x);'),
+q('What is the output of the following code?','Error','3.14|PI = 3.14|none of the mentioned','الـ const لازم تديله قيمة وقت التعريف: A const field requires a value to be provided.','const float PI;\n\nPI = 3.14f;\n\nConsole.WriteLine(PI);'),
+q('What is the output of the following code?','3.14','PI = 3.14|Error|none of the mentioned','','const float PI = 3.14f;\n\nConsole.WriteLine(PI);'),
+q('What is the output of the following code?','Error','3.14|3.144|none of the mentioned','مينفعش تغير قيمة const بعد تعريفها.','const float PI = 3.14f;\n\nPI = 3.144;\n\nConsole.WriteLine(PI);'),
+q('Which of the following is a valid variable name?','_name','123Name|My name|My-name','الاسم لازم يبدأ بحرف أو _ وميحتويش مسافة أو رموز. int كمان Keyword مينفعش تتسمى بيه.'),
+q('Error in line 1 is because','uint is unsigned int and the value is signed','uint is not a datatype|we can’t declare a variable named x|None of the mentioned','uint = 32-bit unsigned يعني مفيهوش سالب.',K1),
+q('Error in line 2 is because','Both a and b','a. The value must be identified as float by f suffix|b. Value represents double-precision number|c. The value is too large','5.2 قيمة double، لازم تكتبها 5.2f عشان تبقى float.',K1),
+TF('Error in line 3 is because value is too large for the byte data type',1,'byte يخزن من 0 لـ 255 بس.',K1),
+TF('Error in line 4 is because True does not exist as a valid Boolean type',1,'في C# القيم هي true وfalse بحروف صغيرة (case-sensitive).',K1),
+TF('Error in line 5 is because int only store integer numbers',1,'int بيخزن أعداد صحيحة بدون كسور.',K1)
+];
+/* extra Lecture 2 questions */
+const B2=[
+q('Which is the correct hierarchy (outer to inner) of a C# program?','namespace > class > method > statement','class > namespace > method > statement|method > class > namespace > statement|namespace > method > class > statement'),
+q('Which comment style can span multiple lines?','/* ... */','// ...|# ...|<!-- ... -->'),
+q('What does 5.2E-3 equal?','0.0052','5200|0.52|52','5.2 × 10^-3 = 0.0052.'),
+q('Every C# statement must end with:','A semicolon ;','A colon :|A period .|A comma ,'),
+q('Which call compiles correctly in C#?','Console.Write("A");','console.write("A");|Console.write("A");|CONSOLE.WRITE("A");','C# case-sensitive: Write غير write.'),
+q('Which keyword defines a variable whose value cannot be changed?','const','var|int|string'),
+q('Which data type is intended for financial and monetary calculations?','decimal','float|byte|char','decimal حجمه 128-bit.'),
+q('What is the range of sbyte?','-128 to 127','0 to 255|-256 to 255|0 to 127','8 bits = 256 قيمة؛ نصفهم سالب في sbyte، وكلهم موجب في byte (0 - 255).'),
+q('How many bits does an int occupy?','32 bits','8 bits|16 bits|64 bits','short = 16، int = 32، long = 64.'),
+q('What does int x = 5, y, z = 50; define?','Three int variables; x and z are initialized','One variable only|Three variables, all initialized|An error')
+];
+/* variants of Exercise 2 (comprehensive quiz only) */
+const V=[
+q('What is printed by the following code?','78, then a new line, then 9','7 8 9 on three lines|789 on one line|Error','Write(7) وWriteLine(8) على نفس السطر ثم سطر جديد، بعدها Write(9).','Console.Write(7);\nConsole.WriteLine(8);\nConsole.Write(9);'),
+q('What is the output of the following code?','y = 20','y = 7|y = 27|Error','','int y = 7;\n\ny = 20;\n\nConsole.WriteLine("y = " + y);'),
+q('What is the output of the following code?','9.8','G = 9.8|G|Error','','const double G = 9.8;\n\nConsole.WriteLine(G);'),
+q('What is the output of the following code?','Error','10|12|N','لا يمكن تغيير قيمة const.','const int N = 10;\n\nN = 12;\n\nConsole.WriteLine(N);'),
+q('Which of the following is a valid variable name?','total_2','2total|total price|total$'),
+TF('byte b = 300; gives an error because 300 is outside the byte range (0 to 255).',1,'','byte b = 300;'),
+q('Why does this line give an error?','2.5 is a double literal and needs the f suffix','float cannot store decimals|f is not a data type|2.5 is too large','لازم تكتب 2.5f.','float f = 2.5;')
+];
+
+/* ---------- Lecture content ---------- */
+const L=[
+{n:1,t:'Introduction',s:'مكونات الكمبيوتر، البرمجة الهيكلية، الـ Algorithms والـ Flowcharts',qs:[...A,...A2],
+lec:H('مكونات الـ Computer System')+`<div class=stk><div>Users</div><div>Application Programs</div><div>Operating System</div><div>Computer Hardware</div></div>`+U(['<b>Hardware</b>: الموارد الأساسية للنظام، زي CPU وMemory وأجهزة Input/Output.','<b>Application programs</b>: بتحدد إزاي الموارد تتستخدم لحل مشاكل المستخدم (Word, Excel, compilers, Web browsers).','<b>Operating system</b>: بيتحكم في الـ Hardware وينسق استخدامه بين البرامج (Windows, iOS, Android).','<b>Users</b>: غالباً بشر، وممكن آلات.','الأجهزة (Processor, Memory, Input/Output) بتتوصل ببعض عن طريق <b>common bus</b>.'])
++H('Software والبرمجة')+U(['<b>Program</b> = مجموعة تعليمات (instructions) لتنفيذ مهمة معينة. <b>Software</b> = مجموعة برامج.','المبرمج بيكتب <b>source code</b> بلغة برمجة ولازم يلتزم بقواعدها (syntax).','بعد كده الكود يتنفذ بطريقتين:'])
++T([['<b>Interpreter</b>','بينفذ الكود مباشرة (مثال: Python)'],['<b>Compiler</b>','بيحول الكود لبرنامج تنفيذي (مثال: C++)']])
++T([['<b>High-level</b>','موجهة للمستخدم، أسهل في الكتابة: <code>x = a + b</code>'],['<b>Low-level</b>','موجهة للآلة، محتاجة كود تفصيلي: <code>LOAD / ADD / STORE</code>']])
++H('Structured vs Unstructured Programming')+T([['','<b>Structured</b>','<b>Unstructured</b>'],['التنظيم','functions / modules','block واحد كامل'],['القراءة','سهلة','صعبة'],['التعقيد','منظم حتى في البرامج الكبيرة','معقد جداً في البرامج الكبيرة'],['الاستخدام','مشاريع صغيرة ومتوسطة (وأكبر)','مينفعش للمشاريع المتوسطة والمعقدة'],['التعديل','سهل','صعب'],['Data types','أنواع كتير','أنواع محدودة'],['تكرار الكود','بيتجنبه','ممكن يتكرر'],['Test & Debug','سهل بسبب الـ modules','صعب']])
++`<p class=mut>Structured: C++, C#, Java, Python. &nbsp; Unstructured: الإصدارات القديمة من BASIC وCOBOL وFORTRAN.</p>`
++H('Algorithm و Pseudocode')+U(['<b>Algorithm</b>: خطوات محددة (step-by-step) لحل مشكلة، زي وصفة الأكل.','<b>Pseudocode</b>: وصف شبه الإنجليزي للخوارزمية؛ للقراءة البشرية، ملوش syntax ثابت، ومينفعش يتعمله compile.','مثال دليل التليفون: (1) صفحة صفحة = صح وبطيء. (2) صفحتين صفحتين = سريع وفيه bug. (3) نفتح من النص ونقسم المشكلة نصين كل مرة = صح وسريع؛ 1024 صفحة تحتاج 10 خطوات بس.'])
++H('Flowchart')+`<svg viewBox="0 0 420 80" fill="none" stroke="currentColor" stroke-width="1.6" font-size="11" text-anchor="middle" fill-opacity="1"><rect x="5" y="12" width="70" height="30" rx="15"/><rect x="95" y="12" width="70" height="30"/><polygon points="205,27 240,7 275,27 240,47"/><polygon points="295,47 310,7 380,7 365,47"/><path d="M385 27h30m-6-5l6 5-6 5"/><g fill="currentColor" stroke="none"><text x="40" y="66">Start / Stop</text><text x="130" y="66">Process</text><text x="240" y="66">Decision</text><text x="337" y="66">Input / Output</text><text x="400" y="66">Flow</text></g></svg>`
++U(['<b>Terminator</b> (بيضاوي): البداية أو النهاية.','<b>Rectangle</b>: عملية (process).','<b>Diamond</b>: قرار أو تفرع (yes / no).','<b>Parallelogram</b>: دخول أو خروج بيانات.','<b>Arrow</b>: اتجاه سير العملية.'])
++H('C# و Visual Studio')+U(['<b>C#</b>: لغة general-purpose مرتبطة بمنصة Microsoft، وبتستخدم في Unity Game Engine.','<b>IDE</b> (Integrated Development Environment) زي Visual Studio: بيوفر بيئة لكتابة الكود وعمل compile له.','الـ C# compiler بيحول الكود لـ <b>CIL</b> (Common Intermediate Language)، والجهاز لازم يكون عليه <b>.NET Framework</b> عشان يشغل CIL.']),
+sum:['الـ <b>Hardware</b> بيوفر الموارد (CPU, Memory, I/O)، والـ <b>Application</b> بتحدد استخدامها، والـ <b>OS</b> بيتحكم في الـ Hardware، والـ <b>User</b> إنسان أو آلة.','Windows / iOS / Android = OS. Word / Excel / Chrome / compilers = Applications.','<b>Program</b> = مجموعة تعليمات. <b>Software</b> = مجموعة برامج. <b>Source code</b> = تعليمات البرنامج.','<b>Interpreter</b> (Python) ينفذ مباشرة، <b>Compiler</b> (C++) يحول لبرنامج تنفيذي.','<b>Structured</b> = modules/functions، سهل القراءة والتعديل والـ debug، بيتجنب تكرار الكود. <b>Unstructured</b> = block واحد (BASIC, COBOL, FORTRAN).','<b>Algorithm</b> = خطوات محددة لحل مشكلة. <b>Pseudocode</b> للقراءة البشرية فقط.','Flowchart: Terminator = Start/Stop، Rectangle = process، Diamond = decision، Parallelogram = I/O، Arrow = الاتجاه.','دليل التليفون 1024 صفحة بالتقسيم للنص = 10 خطوات.','<b>C#</b> general-purpose، منصة Microsoft، Unity. <b>IDE</b> = Integrated Development Environment.','C# code &rarr; (compiler) &rarr; <b>CIL</b> &rarr; يشتغل على <b>.NET Framework</b>.']},
+{n:2,t:'Basic Syntax',s:'Namespaces, Write/WriteLine, المتغيرات، الثوابت، الـ Identifiers',qs:[...B,...B2],
+lec:H('Program Structure')+`<div class=nest><div>namespace<div>class<div>method<div>statements</div></div></div></div></div>`+U(['البرنامج = namespace أو أكتر، كل namespace فيه class أو أكتر، كل class فيه method أو أكتر، كل method فيه statements.','الـ namespace ممكن يحتوي namespaces تانية. وهو طريقة لتنظيم الكود في مجموعات (System, System.IO, System.Net, System.Collections ...).'])
++H('Hello World')+C(`namespace HelloWorld
+{
+    class Program
+    {
+        static void Main()
+        {
+            System.Console.Write("Hello World!");
+        }
+    }
+}`)+U(['<code>Main</code> هي نقطة البداية؛ أي كود جواها بيتنفذ لما البرنامج يشتغل.','<code>Write</code> method جوه class اسمه <code>Console</code> جوه namespace اسمه <code>System</code>.','النص (string literal) بين علامات تنصيص مزدوجة <code>"</code>، وكل statement لازم ينتهي بـ <code>;</code>','C# <b>case-sensitive</b>: <code>write</code> غير <code>Write</code> وبتطلع error.'])
++H('using Directive')+U(['بتخليك تستخدم كل حاجة في namespace من غير كتابة الاسم الكامل: <code>using System;</code> وبعدها <code>Console.Write(...)</code>.'])
++H('Write و WriteLine')+C(`Console.Write(1);
+Console.WriteLine(2);
+Console.WriteLine(3);
+Console.Write(4);`)+C(`12
+3
+4`,1)+`<p><code>Write</code> من غير سطر جديد، و<code>WriteLine</code> بيطبع ويضيف سطر جديد بعده.</p>`
++H('Comments')+C(`// single-line comment
+/* multi-line
+   comment */`)
++H('Literals')+C(`5        // integer
+5.2      // floating-point
+5.2E-3   // = 0.0052
+'A'      // char
+"Hi"     // string`)
++H('Variables و Data Types')+T([['<code>int</code>','عدد صحيح (32-bit)'],['<code>double</code>','عدد عشري (64-bit)'],['<code>char</code>','حرف واحد بين <code>\'\'</code> (16-bit)'],['<code>string</code>','نص بأي طول بين <code>""</code>'],['<code>bool</code>','<code>true</code> أو <code>false</code>']])
++T([['byte','8-bit unsigned (0 – 255)'],['sbyte','8-bit signed (-128 – 127)'],['short / ushort','16-bit'],['int / uint','32-bit'],['long / ulong','64-bit'],['float','32-bit'],['double','64-bit'],['decimal','128-bit للحسابات المالية']])
++C(`int x;
+x = 5;          // assignment
+int y = 5;      // initialization
+y = 6;          // overwrite
+int a = 5, b, c = 50;`)
++H('Constants')+C(`const int x = 15;
+x = 20;   // error`)+U(['<code>const type name = value;</code> لازم تديله قيمة وقت التعريف: <i>A const field requires a value to be provided.</i>'])
++H('Identifiers')+U(['لا مسافات.','يبدأ بحرف أو <code>_</code>.','حروف وأرقام و <code>_</code> فقط (مفيش @ أو -).','مينفعش يكون Keyword (int, double, string).','Case-sensitive (<code>size</code> غير <code>Size</code>).'])+`<p class=mut>أمثلة غلط: <code>1stName</code> &nbsp; <code>total count</code> &nbsp; <code>price@store</code></p>`
++T([['uint','<code>100U</code>'],['long','<code>100L</code>'],['ulong','<code>100UL</code>'],['float','<code>123.45F</code>'],['decimal','<code>123.45M</code>']])+`<p class=mut>Suffixes لتحديد نوع الرقم.</p>`,
+sum:['البرنامج: <b>namespace &gt; class &gt; method &gt; statements</b>. نقطة البداية <code>Main()</code> ولازم تكون موجودة.','<b>Console</b> = class، <b>Write / WriteLine</b> = methods، <b>System</b> = namespace.','<code>using System;</code> بتضيف namespace للبرنامج.','<b>Write</b> من غير سطر جديد، <b>WriteLine</b> مع سطر جديد.','كل statement ينتهي بـ <code>;</code> وC# <b>case-sensitive</b>.','Comments: <code>//</code> سطر واحد، <code>/* */</code> أكتر من سطر.','Literals: 5 / 5.2 / 5.2E-3 (=0.0052) / \'A\' / "Hi". النص بعلامات مزدوجة والحرف بعلامة مفردة.','Types: int، double، char، string، bool (<code>true</code>/<code>false</code> بحروف صغيرة).','byte (0–255)، sbyte (-128 – 127)، short 16-bit، int 32-bit، long 64-bit، float 32-bit، double 64-bit، decimal 128-bit للمالية.','<code>float f = 2.5f;</code> (لازم f) و <code>decimal d = 1.5M;</code>','<code>int x = 5;</code> تعريف + قيمة. القيمة الجديدة بتعمل <b>overwrite</b>. المتغير لازم ياخد قيمة قبل الاستخدام.','<code>const</code>: لازم قيمة وقت التعريف ومينفعش تتغير بعدين.','Identifier: يبدأ بحرف أو _، حروف وأرقام و _ فقط، من غير مسافة، ومش Keyword.']},
+{n:3,t:'Data Types'},{n:4,t:'Operators'},{n:5,t:'Branching'}
+];
+let ALL;
+
+/* ---------- English content, detailed explanations, UI text ---------- */
+const P=(i,k)=>L[i].lec.match(/<pre[\s\S]*?<\/pre>/g)[k],SV=L[0].lec.match(/<svg[\s\S]*?<\/svg>/)[0];
+L[0].se='Computer components, structured programming, algorithms, flowcharts';
+L[1].se='Namespaces, Write/WriteLine, variables, constants, identifiers';
+L[0].en=[
+H('Computer system components')+`<div class=stk><div>Users</div><div>Application Programs</div><div>Operating System</div><div>Computer Hardware</div></div>`+U(['<b>Hardware</b>: basic computing resources (CPU, memory, I/O devices).','<b>Application programs</b>: define how the resources are used to solve user problems (word processors, spreadsheets, compilers, web browsers).','<b>Operating system</b>: controls the hardware and coordinates its use among programs (Windows, iOS, Android).','<b>Users</b>: commonly humans, but can be machines.','Processor, memory and I/O devices are connected by a <b>common bus</b>.']),
+H('Software and programming languages')+U(['<b>Program</b> = a collection of instructions for a specific task. <b>Software</b> = a collection of programs.','The programmer writes <b>source code</b> and must obey the language rules (syntax).'])+T([['<b>Interpreter</b>','runs the source code directly (e.g. Python)'],['<b>Compiler</b>','converts it into an executable program (e.g. C++)'],['<b>High-level</b>','user-oriented, easy to write: <code>x = a + b</code>'],['<b>Low-level</b>','machine-oriented, detailed: <code>LOAD / ADD / STORE</code>']]),
+H('Structured vs Unstructured programming')+T([['','<b>Structured</b>','<b>Unstructured</b>'],['Organization','functions / modules','one single block'],['Readability','easy','hard'],['Complexity','organized even in big programs','very complex in big programs'],['Application','small and medium projects','not for medium or complex projects'],['Modification','easy','hard'],['Data types','many','limited'],['Code duplication','avoided','possible'],['Test and debug','easy (separate modules)','hard']])+`<p class=mut>Structured: C++, C#, Java, Python. Unstructured: early BASIC, COBOL, FORTRAN.</p>`,
+H('Algorithms and pseudocode')+U(['<b>Algorithm</b>: a set of step-by-step instructions to solve a problem, like a recipe.','<b>Pseudocode</b>: English-like description of an algorithm. Made for human reading, no standard syntax, cannot be compiled.','Phone book: (1) page by page = correct but slow. (2) two pages at a time = fast but buggy. (3) open in the middle and halve the problem = correct and fast; 1024 pages need only 10 steps.']),
+H('Flowcharts')+SV+U(['<b>Terminator</b>: start or end.','<b>Rectangle</b>: a process (operation).','<b>Diamond</b>: a decision or branching point.','<b>Parallelogram</b>: input or output.','<b>Arrow</b>: direction of the flow.']),
+H('C# and Visual Studio')+U(['<b>C#</b> is a general-purpose language tied to the Microsoft platform; also used in the Unity Game Engine.','An <b>IDE</b> (Integrated Development Environment) such as Visual Studio helps you write code and compile it.','The C# compiler compiles C# code into <b>CIL</b> (Common Intermediate Language). The computer needs the <b>.NET Framework</b> to run CIL.'])
+];
+L[0].sen=['<b>Hardware</b> gives resources (CPU, memory, I/O); <b>applications</b> define how they are used; the <b>OS</b> controls the hardware; the <b>user</b> is a human or a machine.','Windows, iOS, Android = OS. Word, Excel, Chrome, compilers = applications.','<b>Program</b> = collection of instructions. <b>Software</b> = collection of programs. <b>Source code</b> = the program instructions.','<b>Interpreter</b> (Python) runs code directly; <b>compiler</b> (C++) converts it to an executable.','<b>Structured</b>: modules/functions, easy to read, change and debug, no duplication. <b>Unstructured</b>: one single block (BASIC, COBOL, FORTRAN).','<b>Algorithm</b> = specific steps to solve a problem. <b>Pseudocode</b> = for human reading only.','Flowchart: Terminator = start/stop, rectangle = process, diamond = decision, parallelogram = I/O, arrow = flow.','Phone book of 1024 pages, halving each time = 10 steps.','<b>C#</b>: general-purpose, Microsoft platform, Unity. <b>IDE</b> = Integrated Development Environment.','C# code &rarr; compiler &rarr; <b>CIL</b> &rarr; runs on the <b>.NET Framework</b>.'];
+L[1].en=[
+H('Program structure')+`<div class=nest><div>namespace<div>class<div>method<div>statements</div></div></div></div></div>`+U(['A program has one or more namespaces; each has one or more classes; each class has one or more methods; each method has statements (commands).','A namespace can contain other namespaces. Namespaces group related code: System, System.IO, System.Net, System.Collections...']),
+H('Hello World')+P(1,0)+U(['<code>Main</code> is the entry point: code inside it runs when the program starts.','<code>Write</code> is a method of the class <code>Console</code> in the namespace <code>System</code>.','String literals use double quotes; every statement ends with <code>;</code>','C# is <b>case-sensitive</b>: <code>write</code> is not <code>Write</code>.']),
+H('The using directive')+U(['<code>using System;</code> lets you write <code>Console.Write(...)</code> without the full namespace name.']),
+H('Write vs WriteLine')+P(1,1)+P(1,2)+`<p><code>Write</code> prints with no new line; <code>WriteLine</code> prints and then moves to a new line.</p>`,
+H('Comments')+P(1,3),
+H('Literals')+P(1,4),
+H('Variables and data types')+T([['<code>int</code>','whole number (32-bit)'],['<code>double</code>','floating-point number (64-bit)'],['<code>char</code>','single character, in single quotes (16-bit)'],['<code>string</code>','text of any length, in double quotes'],['<code>bool</code>','<code>true</code> or <code>false</code>'],['byte / sbyte','8-bit: 0 to 255 / -128 to 127'],['short, int, long','16 / 32 / 64-bit signed'],['float, double, decimal','32 / 64 / 128-bit (decimal for money)']])+P(1,5),
+H('Constants')+P(1,6)+U(['<code>const type name = value;</code> needs a value at definition (A const field requires a value to be provided) and can never be changed.']),
+H('Identifiers')+U(['No white space.','Start with a letter or <code>_</code>.','Only letters, digits and <code>_</code>.','Cannot be a keyword (int, double, string).','Case-sensitive: <code>size</code> and <code>Size</code> differ.'])+T([['uint','<code>100U</code>'],['long','<code>100L</code>'],['ulong','<code>100UL</code>'],['float','<code>123.45F</code>'],['decimal','<code>123.45M</code>']])+`<p class=mut>Suffixes set the number type.</p>`
+];
+L[1].sen=['Structure: <b>namespace &gt; class &gt; method &gt; statements</b>. <code>Main()</code> is the entry point and every program needs it.','<b>Console</b> = class, <b>Write / WriteLine</b> = methods, <b>System</b> = namespace.','<code>using System;</code> includes a namespace in the program.','<b>Write</b>: no new line. <b>WriteLine</b>: new line after.','Every statement ends with <code>;</code>. C# is <b>case-sensitive</b>.','Comments: <code>//</code> one line, <code>/* */</code> multiple lines.','Literals: 5, 5.2, 5.2E-3 (= 0.0052), \'A\', "Hi". Strings use double quotes, chars single quotes.','Types: int, double, char, string, bool (<code>true</code>/<code>false</code> in lowercase).','byte 0-255, sbyte -128-127, short 16-bit, int 32-bit, long 64-bit, float 32-bit, double 64-bit, decimal 128-bit (money).','<code>float f = 2.5f;</code> needs the f suffix; <code>decimal d = 1.5M;</code>','<code>int x = 5;</code> defines and initializes. A new value overwrites the old one. A variable needs a value before use.','<code>const</code>: needs a value at definition and cannot change.','Identifier: starts with a letter or _, only letters, digits and _, no spaces, not a keyword.'];
+L[0].d=[
+`تخيل الكمبيوتر زي طبقات. الـ Hardware هو الجسم: الـ CPU زي المخ، والـ Memory الذاكرة، وأجهزة الإدخال والإخراج. فوقه الـ Operating System (زي Windows) وهو المدير اللي بيتحكم في الجسم ويوزع الشغل. فوقه الـ Applications (زي Word وChrome) وهي بتحدد إزاي الموارد تتستخدم عشان تحل مشكلة المستخدم. وآخر حاجة الـ User وممكن يكون إنسان أو آلة. المهم للامتحان: مين بيعمل إيه؟ الـ OS بيتحكم في الـ Hardware، والـ Application بتحدد استخدام الموارد.`,
+`البرنامج (Program) هو مجموعة أوامر لمهمة معينة، ومجموعة البرامج دي اسمها Software. المبرمج بيكتب الأوامر بلغة برمجة وده اسمه source code. الكمبيوتر مبيفهمش الكود مباشرة، فيا إما Interpreter يشغله زي Python، أو Compiler يحوله لبرنامج جاهز زي C++. الـ High-level زي x = a + b سهلة عليك، والـ Low-level زي LOAD وADD أقرب للآلة وأصعب في الكتابة.`,
+`الـ Unstructured كأنك كتبت الكود كله في ورقة واحدة طويلة: ينفع للبرامج الصغيرة بس بيتلخبط في الكبيرة، وفيه تكرار وصعب في الـ debug (زي BASIC وCOBOL وFORTRAN القديمة). الـ Structured بيقسم الكود لـ modules أو functions، كل واحد ليه مهمة، فالقراءة والتعديل والتجربة أسهل ومفيش تكرار (C++ وC# وJava وPython). لو السؤال فيه modules يبقى Structured، ولو فيه one single block يبقى Unstructured.`,
+`الـ Algorithm ببساطة وصفة: خطوات محددة بالترتيب لحل مشكلة. مثال دليل التليفون: تدور صفحة صفحة (صح بس بطيء)، أو صفحتين صفحتين (سريع بس ممكن تفوّت الاسم)، أو تفتح من النص وتشوف الاسم في أنهي نص وتكرر (صح وسريع). 1024 صفحة تخلص في 10 خطوات بس لأن كل مرة بتنصّف. الـ Pseudocode هو كتابة الخوارزمية بلغة شبه إنجليزي للبني آدم، مش للآلة ومينفعش يتعمله compile.`,
+`الـ Flowchart رسمة بتوضح الخطوات بالأشكال والأسهم. احفظ الأشكال: البيضاوي (Terminator) للبداية والنهاية، المستطيل للعملية، المعين (Diamond) للقرار yes/no، متوازي الأضلاع للإدخال والإخراج، والسهم لاتجاه السير. ركز على إن المعين = قرار لأنه بيجي كتير في الامتحان.`,
+`C# لغة عامة الاستخدام من Microsoft وبتتستخدم في ألعاب Unity. بنكتب الكود في IDE زي Visual Studio، والـ IDE يعني Integrated Development Environment: بيئة بتساعدك تكتب وتعمل compile. الـ compiler بيحول كود C# لـ CIL مش لكود الآلة مباشرة، وعشان الجهاز يشغل الـ CIL لازم يكون عليه .NET Framework.`
+];
+L[1].d=[
+`البرنامج زي عرايس الماتريوشكا: الأكبر namespace (مجموعة منظمة)، جواه class، جواه method، وجواها statements وهي الأوامر. ممكن namespace يبقى جواه namespace تاني. مثلاً System هو namespace فيه class اسمه Console وفيه methods زي Write. احفظ الترتيب: namespace ثم class ثم method ثم statement.`,
+`الـ Main هي الباب اللي البرنامج بيدخل منه: أي كود جواها بيتنفذ أول ما تشغل، ولازم تكون موجودة في أي برنامج. السطر Console.Write("Hello World!"); معناه: من namespace اسمه System، class اسمه Console، استخدم method اسمها Write وابعتلها النص. النص لازم بين علامات تنصيص مزدوجة، وكل أمر ينتهي بـ ; ولو نسيتها هيطلع error. وكمان C# بتفرّق بين الحروف الكبيرة والصغيرة: write غير Write.`,
+`بدل ما تكتب System.Console.Write كل مرة، بتكتب في أول الملف using System; فتقدر تكتب Console.Write على طول. الـ using بتضيف namespace للبرنامج بس، ومبتغيرش حاجة تانية.`,
+`الاتنين بيطبعوا، والفرق في السطر الجديد: Write بيطبع ويفضل في نفس السطر، وWriteLine بيطبع وينزل سطر جديد. في المثال: Write(1) تطبع 1 ومتنزلش، WriteLine(2) تطبع 2 وتنزل، فالناتج 12 في سطر واحد. بعدين 3 وتنزل، وبعدها 4. عشان تحل أي سؤال، تتبع كل سطر وشوف هل هينزل بعده سطر ولا لأ.`,
+`الـ comments سطور الكمبيوتر بيتجاهلها، بتكتبها لنفسك عشان توضح الكود أو توقف سطر مؤقتاً. علامة // للسطر الواحد (من العلامة لآخر السطر)، و /* ... */ لأكتر من سطر.`,
+`الـ literal هو قيمة ثابتة مكتوبة في الكود: 5 عدد صحيح، 5.2 عدد عشري، 'A' حرف واحد بعلامة تنصيص مفردة، "Hi" نص بعلامات مزدوجة. و5.2E-3 معناها 5.2 × 10 أس -3 يعني 0.0052 (الأس السالب بيحرك العلامة العشرية 3 خانات لليسار).`,
+`المتغير صندوق في الذاكرة بتحط فيه قيمة، والنوع بيحدد إيه اللي ينفع تحطه: int للصحيح، double للعشري، char حرف، string نص، bool يا true يا false. كل ما عدد البتات أكبر كل ما المدى أكبر: byte 8 بت يعني 256 قيمة (من 0 لـ 255)، وsbyte نفس الـ 256 بس نصهم سالب (-128 لـ 127). int 32 بت، long 64، decimal 128 للحسابات المالية. لو حطيت قيمة جديدة تتمسح القديمة (overwrite)، ولازم تدي المتغير قيمة قبل ما تستخدمه وإلا error.`,
+`const معناها ثابت: بتحط له قيمة وقت التعريف ومينفعش تتغير بعدين. لو عرفته من غير قيمة يطلع error (A const field requires a value)، ولو حاولت تغيّره برضه error. مثال: PI.`,
+`اسم المتغير (identifier): يبدأ بحرف أو _ ، بعدين حروف وأرقام و _ بس، من غير مسافة ولا رموز زي @ و -، ومينفعش يكون كلمة محجوزة زي int. وC# case-sensitive. وفي الأرقام بنزود حرف في الآخر يحدد النوع: U للـ uint، L للـ long، UL للـ ulong، F للـ float، M للـ decimal. عشان كده float f = 2.5 غلط ولازم تكتب 2.5f.`
+];
+[[A,{0:'System components: hardware, operating system, application programs and users.',2:'CPU, memory and I/O devices are hardware. Windows and Android are operating systems.',3:'Applications define how resources are used to solve user problems. Controlling the hardware is the OS job.',5:'The OS controls the hardware and coordinates its use among programs.',6:'Word, Chrome and Visual Studio are all applications.',7:'A user is usually a human, but can also be a machine.',10:'Software = a collection of programs; a program = a collection of instructions.',26:'Algorithm = specific step-by-step instructions to solve a problem.',27:'Pseudocode is English-like, has no fixed syntax and cannot be compiled.'}],
+[A2,{0:'An interpreter (Python) runs code directly; a compiler (C++) converts it into an executable.',2:'Example: LOAD / ADD / STORE. High-level looks like x = a + b.',3:'Terminator = start/stop, rectangle = process, diamond = decision, parallelogram = I/O.',5:'Binary search idea: 2^10 = 1024, so 10 steps.',6:'CIL then needs the .NET Framework to run.'}],
+[B,{0:'Console is a class inside the System namespace.',1:'Write and WriteLine are methods of the Console class.',2:'System and Section1 are both namespaces.',3:'using System; lets you write Console instead of System.Console.',4:'Line 9 (WriteLine) prints *** then a new line; line 10 (Write) prints *** with no new line.',6:'Write("\\n") prints a new-line character manually, so it has the same effect.',9:'"x" in quotes is a string literal printed as is, not the variable value.',10:'The new value 10 overwrites 5.',11:'x was never assigned a value (unassigned variable), so it cannot be used.',12:'A const must be given a value at definition: A const field requires a value to be provided.',14:'A const value cannot be changed after definition.',15:'A name must start with a letter or _ and cannot contain spaces or symbols. int is a keyword.',16:'uint is a 32-bit unsigned integer, so it cannot hold a negative value.',17:'5.2 is a double literal; write 5.2f to make it a float.',18:'byte stores 0 to 255 only.',19:'In C# the values are true and false in lowercase (case-sensitive).',20:'int stores whole numbers only, without fractions.'}],
+[B2,{2:'5.2 x 10^-3 = 0.0052.',4:'C# is case-sensitive: Write is not write.',6:'decimal is 128-bit.',7:'8 bits = 256 values; sbyte splits them into negative and positive, byte is all positive (0 to 255).',8:'short = 16, int = 32, long = 64 bits.'}],
+[V,{0:'Write(7) and WriteLine(8) print on the same line, then a new line; Write(9) follows.',3:'A const value cannot be changed.',6:'You must write 2.5f.'}]].forEach(([a,m])=>a.forEach((x,i)=>x.ee=m[i]||""));
+/* ---------- Lectures 3, 4, 5 ---------- */
+const Q=(t,c,w,en,ar,k,st)=>{const x=q(t,c,w,ar||"",k);x.ee=en||"";x.st=st||0;return x};
+const TQ=(t,v,en,ar,k)=>Q(t,v?"True":"False",v?"False":"True",en,ar,k);
+const X1=`int x = 5;\nint y = 10;\n\ny = x;\nConsole.WriteLine(y);\n\nx = 5;\ny = 10;\nx = y;\nConsole.WriteLine(x);`;
+const X2=`int x = 5;\nint y = 10;\nint result = x + y;\n\nConsole.WriteLine("Result of {0} + {1} = {2}", x, y, result);\n\nConsole.WriteLine("Result of" + x + "+" + y + "=" + result);\n\nConsole.WriteLine("Result of", x, y, result);\n\nConsole.WriteLine("Result of x + y = result");\n\nConsole.WriteLine("Result of" + x  "+"  y + "=" + result);`;
+const c1=`int x = 2;\nlong y;\ny = x;`,c2=`long x = 2;\nint y;\ny = x;`,c3=`long x = 2;\nint y;\ny = (int)x;`,c4=`int x = 2;\nfloat y;\ny = x;`,c5=`float x = 2.5f;\nint y;\ny = (int)x;`,c6=`int x = int.Parse(Console.ReadLine());`;
+const cv='This type of conversion is called',vy='The value of y will be',imp='Implicit Conversion',BC='Both Explicit Conversion and Casting';
+
+/* ----- Lecture 3: Exercise 3 (conversions) + extra ----- */
+const C3=[
+Q(cv,imp,'Explicit Conversion|Casting|Parsing','int fits in long without losing data, so the conversion is automatic.','int بتتحط في long من غير خسارة فالتحويل تلقائي (Implicit).',c1),
+Q(vy,'2','2000|0|Error will occur','The value is copied unchanged.','',c1),
+Q(vy,'Error will occur','2|2000|0','long to int may lose data, so it needs a cast.','من long لـ int ممكن تضيع بيانات فلازم cast.',c2),
+Q(cv,BC,'Implicit Conversion|Explicit Conversion (only)|Parsing','(int) is an explicit conversion, also called a cast.','(int) هو Explicit وبيتسمى Casting.',c3),
+Q(vy,'2','2000|0|Error will occur','',"",c3),
+Q(cv,imp,'Explicit Conversion|Casting|Parsing','int to float loses no data.','',c4),
+Q(vy,'2','2000|0|Error will occur','A float prints 2.','',c4),
+Q(cv,BC,'Implicit Conversion|Explicit Conversion (only)|Parsing','','',c5),
+Q(vy,'2','2.5|0|Error will occur','A cast drops the fraction (it truncates).','الـ cast بيشيل الكسر.',c5),
+Q(cv,'Both Explicit Conversion and Parsing','Explicit Conversion (only)|Casting|Implicit Conversion','ReadLine returns a string; int.Parse converts it explicitly.','Parse بيحول النص لرقم (Explicit).',c6),
+Q('What is the size of a bool variable?','1 byte','1 bit|2 bytes|4 bytes'),
+Q('In a signed integer type, the leftmost bit is used for:','The sign','Overflow|Parity|The value only','0 = positive, 1 = negative.'),
+Q('Which type stores only zero and positive integers?','uint','int|sbyte|long','Unsigned types have no sign bit.'),
+Q('What is the value of y?','4','4294967300|0|Error','uint max + 5 overflows; the extra bit is lost.','',`uint x = 4294967295;\nuint y = x + 5;\nConsole.WriteLine(y);`),
+Q('What is the type of the literal 5.35?','double','float|decimal|int','A floating literal with no suffix is a double.'),
+Q('What is the type of the literal 5.35m?','decimal','float|double|char','m / M = decimal.'),
+Q('What is the size of a char variable?','2 bytes','1 byte|4 bytes|8 bytes'),
+Q('Which encoding does the char type use?','UTF-16','UTF-8|ASCII only|Binary only'),
+Q('A string variable is a:','Reference type','Value type|Integral type|Floating-point type'),
+Q('Which of the following is a value type?','char','string|arrays|objects'),
+Q('What does a reference-type variable store?','The address of the data','The data itself|Only the size|Nothing'),
+Q('An implicit conversion is possible when:','The value fits in the new type without data loss','The value is a string|A fraction must be dropped|The programmer writes a cast'),
+Q('Which conversion needs a cast?','double to int','int to long|int to float|byte to int'),
+Q('What does Convert.ToInt32(2.7) return?','3','2|2.7|Error','ToInt32 rounds, a cast truncates.'),
+Q('What type does Console.ReadLine() return?','string','int|char|bool')
+];
+
+/* ----- Lecture 4: Exercise 3 (operators, output) + extra ----- */
+const C4=[
+Q('What is the output of Line 14','5','10|Error|15','y = x copies the value of x (5) into y.','y = x بتنسخ قيمة x (5) جوه y.',X1,10),
+Q('What is the output of Line 19','10','5|Error|15','x = y copies the value of y (10) into x.','',X1,10),
+Q('What is the name of the operator in line 13','Assignment','Equality|Inequality|None of the mentioned','= is assignment; == is equality.','علامة = اسمها Assignment والـ Equality هي ==.',X1,10),
+Q('Output of line 5 is','Result of 5 + 10 = 15','Result of5+10=15|Result of|Result of x + y = result','The placeholders {0}, {1}, {2} are replaced by x, y and result.','الـ {0} و{1} و{2} بتتبدل بقيم x وy وresult.',X2),
+Q('Output of line 7 is','Result of5+10=15','Result of 5 + 10 = 15|Result of|Result of x + y = result','Concatenation with + adds no spaces, so the pieces are joined exactly.','الـ + بتدمج النصوص من غير مسافات.',X2),
+Q('Output of line 9 is','Result of','Result of5+10=15|Result of 5 + 10 = 15|Result of x + y = result','The first argument is the format string "Result of" with no placeholders, so the other arguments are ignored.','النص مفيهوش placeholders فباقي الـ arguments بتتجاهل.',X2),
+Q('Output of line 11 is','Result of x + y = result','Result of5+10=15|Result of 5 + 10 = 15|Result of','Everything inside the quotes is literal text.','',X2),
+Q('Output of line 13 is','Error','Result of5+10=15|Result of|Result of 5 + 10 = 15','The + operators are missing between the pieces, so the code does not compile.','علامات + ناقصة فالكود مش هيتعمله compile.',X2),
+Q('What is the output of the following code?','11','12|10|9','5*3=15, 15/3=5, 5%2=1, 7*3=21, 21/4=5 (int division). So 3 + 4 - 1 + 5 = 11.','',`int x = 3, y = 4;\n\nConsole.WriteLine(x + y - 5 * 3 / x % 2 + 7 * x / y);`),
+Q('What is the output of the following code?','3','1|2|5','++a = 3, b*c = 9, 3 + 9 = 12, then 12 >> 2 = 3 (shift is lower than +).','',`int a = 2, b = 3, c = 3, d = 2;\n\nint n = ++a + b * c >> d;\n\nConsole.WriteLine(n);`),
+Q('What is the output of the following code?','10','12|11|9','++x = 8 and n / m = 2, so z = 10.','',`int x = 7, n = 4, m = 2, z;\n\nz = ++x + n / m;\n\nConsole.WriteLine(z);`),
+Q('What is the output of the following code?','12','11|10|9','-n + x = 3, then 3 << 2 = 12.','',`int x = 7, n = 4, m = 2, z;\n\nz = -n + x << m;\n\nConsole.WriteLine(z);`),
+Q('What is the output of the following code?','0','1|0.5|2','+ and / come before >>: 2 + 2 = 4; ++x = 8; 8 >> 4 = 0.','',`int x = 7, n = 4, m = 2;\nint z = ++x >> 2 + n / m;\n\nConsole.WriteLine(z);`),
+Q('What is the output of the following code?','22','10|23','x += 10 means x = x + 10.','',`int x = 12;\n\nx += 10;\n\nConsole.WriteLine(x);`),
+Q('What is the output of the following code?','2','2.5|3|Error','int / int gives an int; the fraction is dropped.','',`int x = 5, y = 2;\nConsole.WriteLine(x / y);`),
+Q('What is the output of the following code?','1','2|0|2.5','% gives the remainder.','',`int x = 5, y = 2;\nConsole.WriteLine(x % y);`),
+Q('What is the output of the following code?','2.5','2|3|Error','(double)x makes the division a double division.','',`int x = 5, y = 2;\nConsole.WriteLine((double)x / y);`),
+Q('What is the output of the following code?','5','6|4|Error','Postfix: y gets the old value, then x increases.','',`int x = 5;\nint y = x++;\nConsole.WriteLine(y);`),
+Q('What is the output of the following code?','7','13|3|10','','',`int x = 10;\nx -= 3;\nConsole.WriteLine(x);`),
+Q('What is the output of the following code?','False','True|0|Error','2 > 4 is false, so && gives false.','',`Console.WriteLine(5 > 3 && 2 > 4);`),
+Q('What is the output of the following code?','Fail','Pass|40|Error','','',`int score = 40;\nstring r = score >= 50 ? "Pass" : "Fail";\nConsole.WriteLine(r);`),
+Q('Which escape sequence prints a new line?','\\n','\\t|\\\\|\\"'),
+Q('What is the type of the result of a comparison?','bool','int|string|char'),
+Q('What is the output of the following code?','14','20|24|9','* comes before +.','',`Console.WriteLine(2 + 3 * 4);`),
+Q('What is the output of the following code?','1','5|2|0','/ is left-associative: (13 / 5) / 2 = 2 / 2 = 1.','',`Console.WriteLine(13 / 5 / 2);`),
+Q('What is the output of the following code?','3','4|5|Error','x > y is false, so && skips ++x (short-circuit).','',`int x = 3, y = 5;\nbool b = x > y && ++x > 0;\nConsole.WriteLine(x);`)
+];
+
+/* ----- Lecture 5: Branching ----- */
+const S1=`int score = 30;\n\nif (score >= 50)\n{\n    Console.WriteLine("Pass");\n}\n\nConsole.WriteLine("End of program");`;
+const S3=`int score = 30;\n\nif (score >= 50)\n{\n    Console.WriteLine("Pass");\n}\nelse\n{\n    Console.WriteLine("Fail");\n}\n\nConsole.WriteLine("End of program");`;
+const SC=c=>`string color = "${c}";\n\nswitch (color)\n{\n    case "red":    Console.WriteLine("Stop");    break;\n    case "green":  Console.WriteLine("Go");      break;\n    case "yellow": Console.WriteLine("Caution"); break;\n    default:       Console.WriteLine("Invalid color"); break;\n}`;
+const oq='What is the output of the following code?';
+const C5=[
+Q('Which are the three branching statements in C#?','if, if..else, switch','for, while, do..while|if, for, switch|class, method, switch'),
+Q('An if statement executes its statement or block only if the condition is:','true','false|zero|a string'),
+Q('The condition of an if statement must be:','A Boolean expression','An integer value|A string|A character'),
+Q(oq,'End of program','Pass|Pass, then End of program|Error','The condition 30 >= 50 is false, so the block is skipped.','الشرط false فبيتخطى الـ block.',S1),
+Q(oq,'Pass, then End of program','End of program|Pass|Error','90 >= 50 is true, so Pass is printed, then the next statement runs.','',S1.replace('30','90')),
+Q(oq,'Fail, then End of program','Pass, then End of program|Fail|Fail, then Pass','Only the else branch runs, then execution continues.','',S3),
+Q('How many branches of an if..else can run in one execution?','Only one','Both always|None|Two'),
+Q('Which part of if..else runs when the condition is false?','The else part','The if part|Both parts|Neither'),
+Q(oq,'B','A|A, then B|Nothing is printed','Without braces only the first statement belongs to the if; the second always runs.','من غير أقواس أول جملة بس بتتبع الـ if.',`int x = 5;\nif (x > 10)\n    Console.WriteLine("A");\n    Console.WriteLine("B");`),
+Q(oq,'Odd','Even|Even, then Odd|Error','7 % 2 = 1, not 0.','',`int x = 7;\nif (x % 2 == 0)\n    Console.WriteLine("Even");\nelse\n    Console.WriteLine("Odd");`),
+Q(oq,'In','Out|In, then Out|Error','','',`int a = 4;\nif (a > 3 && a < 10)\n    Console.WriteLine("In");\nelse\n    Console.WriteLine("Out");`),
+Q('Nested if statements mean:','Using an if or if..else inside another if or if..else','Using two else parts in one if|Using a switch instead of an if|Using an if without a condition','It is always legal in C# to nest if statements.','الـ nested if معناها if أو if..else جوه if أو if..else تانية.'),
+Q(oq,'Good','Pass|Very Good|Excellent','Only the condition 70 < 75 && 70 >= 65 is true, so only Good is printed.','',`int score = 70;\n\nif (score >= 85)\n    Console.WriteLine("Excellent");\n\nif (score < 85 && score >= 75)\n    Console.WriteLine("Very Good");\n\nif (score < 75 && score >= 65)\n    Console.WriteLine("Good");\n\nif (score < 65 && score >= 50)\n    Console.WriteLine("Pass");\n\nif (score < 50)\n    Console.WriteLine("Fail");`),
+Q('In the grade program written as separate if statements, what does the condition of the "Good" case need?','Two comparisons joined by &&','One comparison only|A switch statement|An else part','score < 75 && score >= 65.','الشرط فيه مقارنتين ورابط &&.')
+];
+
+/* ----- Exercise 3 variants (comprehensive quiz only) ----- */
+const V3=[
+Q(oq,'3','8|11|Error','b = a copies a into b.','',`int a = 3, b = 8;\nb = a;\nConsole.WriteLine(b);`),
+Q(oq,'Sum of 4 and 9 = 13','Sum of4and9=13|Sum of {0} and {1} = {2}|Error','','',`int p = 4, q = 9;\nint r = p + q;\nConsole.WriteLine("Sum of " + p + " and " + q + " = " + r);`),
+Q('The value of i will be','7','8|7.9|Error will occur','A cast truncates the fraction.','',`double d = 7.9;\nint i = (int)d;`),
+Q(cv,imp,'Explicit Conversion|Casting|Parsing','','',`int m = 8;\nlong n = m;`),
+Q(oq,'9','11|7|19','y*z = 6, 4/y = 2: 5 + 6 - 2 = 9.','',`int x = 5, y = 2, z = 3;\nConsole.WriteLine(x + y * z - 4 / y);`),
+Q(oq,'9','6|8|Error','++x = 3, then 3 * 3 = 9.','',`int x = 2, y = 3;\nint r = ++x * y;\nConsole.WriteLine(r);`),
+Q(oq,'1','4|2|0','x %= 4 means x = x % 4.','',`int x = 9;\nx %= 4;\nConsole.WriteLine(x);`),
+Q(oq,'18','10|9|13','x + n = 9, then 9 << 1 = 18.','',`int x = 6, n = 3, m = 1, z;\nz = x + n << m;\nConsole.WriteLine(z);`)
+];
+
+/* ----- lecture records ----- */
+L[2].se='Data types, overflow, value vs reference types, conversion, user input';L[2].qs=C3;
+L[3].se='Arithmetic, increment, assignment, comparison, logical operators, precedence';L[3].qs=C4;
+L[4].se='if, if..else, nested if (first example)';L[4].s='if، if..else، nested if (لحد أول مثال)';L[4].qs=C5;
+L[2].en=[
+H('Why data types matter')+U(['A data type specifies the <b>size</b> of a variable and the <b>kind of data</b> it can store.','The right type helps avoid errors, saves memory and makes code easier to read and maintain.','C# has types for Boolean, integer, floating-point, character and string values.']),
+H('Boolean, integer and unsigned types')+U(['<b>bool</b>: <code>true</code> or <code>false</code>, 1 byte (.NET name <code>Boolean</code>).','<b>Integer</b> types store whole numbers. The leftmost bit is the <b>sign bit</b> (0 = positive, 1 = negative); the rest store the value. Example: <code>sbyte</code> = 1 sign bit + 7 value bits.','<b>Unsigned</b> types (byte, ushort, uint, ulong) have no sign bit: only zero and positive numbers.']),
+H('Integer overflow')+C(`uint x = 4294967295;   // max of uint (2^32 - 1)
+uint y = x + 5;
+Console.WriteLine(y); // 4`)+U(['Overflow: an operation creates a value outside the range of the type. The bit for 2^32 is lost, so y = 4 (wrong).']),
+H('Floating-point types and literals')+U(['A floating-point value has a whole part and a fraction: float, double, decimal.'])+T([['no suffix','<b>double</b> (5.35)'],['<code>f</code> / <code>F</code>','float (5.35f)'],['<code>d</code> / <code>D</code>','double (5.35d)'],['<code>m</code> / <code>M</code>','decimal (5.35m)']]),
+H('char and string')+U(['<b>char</b>: one character, 2 bytes, <code>System.Char</code>, <b>UTF-16</b> (each character is a unique 16-bit sequence).','<b>string</b>: a reference to a sequence of characters, <code>System.String</code>. Its size is 4 bytes on a 32-bit system, 8 bytes on a 64-bit system.']),
+H('Value types vs reference types')+T([['<b>Value type</b>','holds the data itself: bool, char, sbyte, short, int, long, byte, ushort, uint, ulong, float, double, decimal'],['<b>Reference type</b>','holds the address of the data: string, arrays, objects']])+C(`int x = 5;          // x holds 5
+string s = "Hello"; // s holds the address of "Hello"`),
+H('Type conversion')+U(['<b>Implicit</b>: automatic, when the value fits without losing data (int to long, int to float).','<b>Explicit (cast)</b>: needed when data may be lost (double to int, long to int). Write the type in parentheses.','<code>Convert.ToInt32(2.7)</code> <b>rounds</b> (3); a cast just drops the fraction (2).'])+C(`int x = 50;
+long y = x;        // implicit
+double d = 2.9;
+int i = (int)d;    // explicit cast, i = 2`),
+H('User input')+U(['<code>Console.ReadLine()</code> always returns a <b>string</b>.','Convert it with <code>Convert.ToInt32(...)</code> or <code>int.Parse(...)</code> (shorthand for <code>System.Int32.Parse</code>). Parse also exists for other types (double.Parse...).'])+C(`int x = int.Parse(Console.ReadLine());`)
+];
+L[2].sen=['A data type sets the size of a variable and the kind of data it stores; the right type avoids errors and saves memory.','<b>bool</b> = 1 byte. <b>char</b> = 2 bytes, UTF-16. <b>string</b> = reference type (4 bytes on 32-bit, 8 on 64-bit).','Signed integers: leftmost bit is the sign bit (sbyte = 1 sign bit + 7 value bits). Unsigned types have no sign bit (zero and positive only).','<b>Integer overflow</b>: the result is outside the type range and the extra bit is lost (uint max + 5 gives 4).','Floating literals: no suffix = double, f/F = float, d/D = double, m/M = decimal.','<b>Value types</b> store the data. <b>Reference types</b> (string, arrays, objects) store the address of the data.','<b>Implicit conversion</b>: no data loss, automatic (int to long, int to float).','<b>Explicit conversion (cast)</b>: possible data loss, needs <code>(type)</code>; long to int also needs a cast; <code>(int)2.5f</code> = 2.','<code>Convert.ToInt32</code> rounds; a cast truncates.','<code>Console.ReadLine()</code> returns a string; use <code>int.Parse</code> or <code>Convert.ToInt32</code>. Parsing is an explicit conversion.'];
+L[2].d=[
+`الـ Data Type بيحدد حجم المتغير ونوع البيانات اللي ينفع يتخزن فيه. اختيار النوع الصح بيمنع أخطاء ويوفر ذاكرة ويخلي الكود أوضح.`,
+`الـ bool بياخد true أو false وحجمه 1 byte. في الأعداد الصحيحة (signed) أول بت من الشمال هو بت الإشارة (0 للموجب و1 للسالب) والباقي للقيمة، يعني sbyte حجمه 8 بت: 1 للإشارة و7 للقيمة. أما الـ unsigned (byte, ushort, uint, ulong) مفيهمش بت إشارة فبيخزنوا الصفر والموجب بس.`,
+`الـ Overflow معناه إنك تعمل عملية ناتجها برا المدى اللي النوع يستحمله. أكبر قيمة في uint هي 4294967295، فلو جمعت عليها 5 الناتج الحقيقي أكبر من 32 بت، والبت الزيادة بتضيع ويطلع y = 4 بدل الناتج الصح.`,
+`أي رقم عشري من غير حرف في الآخر بيتعامل كـ double. لو كتبت f يبقى float، وd يبقى double، وm يبقى decimal. فلو عايز float لازم تكتب 5.35f.`,
+`الـ char حرف واحد حجمه 2 byte وبيستخدم ترميز UTF-16 (كل حرف ليه 16 بت). الـ string نص وهو reference type: المتغير بيخزن عنوان مكان النص في الذاكرة، وحجمه 4 بايت على نظام 32 بت و8 على 64 بت.`,
+`الـ value type المتغير بيخزن القيمة نفسها (bool, char, كل الأعداد). الـ reference type المتغير بيخزن عنوان بيشاور على البيانات (string, arrays, objects). int x = 5 يعني في x القيمة 5 مباشرة، لكن string s = "Hello" يعني في s عنوان بيشاور على كلمة Hello.`,
+`الـ Implicit بيحصل تلقائي لما القيمة تتحط في النوع الجديد من غير خسارة، زي int لـ long أو int لـ float. لو ممكن تخسر بيانات (double لـ int بتضيع الكسر، long لـ int ممكن يضيق) لازم Explicit conversion اسمه Cast: بتكتب النوع بين أقواس (int)x، ومن غيره يطلع error. (int)2.5f تساوي 2 لأنها بتشيل الكسر، بينما Convert.ToInt32 بتقرب.`,
+`الدالة Console.ReadLine بترجع دايماً string حتى لو المستخدم كتب رقم، فلو عايزه int لازم تحوله بـ int.Parse أو Convert.ToInt32. int.Parse اختصار لـ System.Int32.Parse، وفيه Parse للأنواع التانية زي double.Parse. والـ Parsing بيعتبر تحويل Explicit.`
+];
+L[3].en=[
+H('Sign and arithmetic operators')+T([['<code>+  -</code>','sign (positive / negative)'],['<code>+ - * / %</code>','add, subtract, multiply, divide, remainder (modulus)']])+C(`int x = 5, y = 2;
+Console.WriteLine(x / y);          // 2  (int / int = int)
+Console.WriteLine(x % y);          // 1
+Console.WriteLine((double)x / y);  // 2.5`)+U(['Operands must have the same type and the result has that type. With different types, the compiler implicitly converts one operand to the other type.']),
+H('Increment and decrement')+C(`int x = 5;
+int y = ++x;  // prefix: x = 6, y = 6
+int a = 5;
+int b = a++;  // postfix: a = 6, b = 5`)+U(['<b>Prefix</b> <code>++x</code>: increase first, then use the new value.','<b>Postfix</b> <code>x++</code>: use the old value, then increase.','<code>--</code> works the same way but decreases by 1.']),
+H('Assignment operators')+U(['<code>=</code> stores a value in a variable. <code>+= -= *= /= %=</code> are shorthands: <code>x += 10</code> means <code>x = x + 10</code>.']),
+H('Comparison operators')+U(['<code>==  !=  &gt;  &lt;  &gt;=  &lt;=</code> compare two values and always give a <b>bool</b>.']),
+H('Logical operators')+T([['<code>&amp;&amp;</code> AND','true only if <b>both</b> operands are true'],['<code>||</code> OR','false only if <b>both</b> operands are false'],['<code>!</code> NOT','reverses the value']]),
+H('Expressions')+U(['An <b>arithmetic expression</b> gives a number; a <b>logical expression</b> gives true or false.','Example: A, B = arrival hours of Ali and Ibrahim; X, Y = their departure hours.'])+T([['Ali arrives early or on time','<code>A &lt;= 10</code>'],['Ali arrives after Ibrahim','<code>A &gt; B</code>'],['Ali leaves before Ibrahim arrives','<code>X &lt; B</code>'],['Ibrahim leaves before 16','<code>Y &lt; 16</code>'],['They never meet','<code>X &lt; B || Y &lt; A</code>'],['Ibrahim stays 5 hours or more','<code>Y - B &gt;= 5</code>']]),
+H('Conditional operator ?:')+C(`string result = score >= 50 ? "Pass" : "Fail";`)+U(['<code>condition ? expression1 : expression2</code> returns expression1 if the condition is true, otherwise expression2 (three operands: ternary).']),
+H('Concatenation, formatting and escape sequences')+C(`string fullName = firstName + " " + lastName;
+Console.WriteLine("Sum = " + x + " and " + y);
+Console.WriteLine("{0} + {1} = {2}", x, y, x + y);`)+T([['<code>\\n</code>','new line'],['<code>\\t</code>','tab'],['<code>\\\\</code>','backslash'],['<code>\\"</code>','double quote'],['<code>\\\'</code>','single quote']])+U(['<code>+</code> joins strings (no spaces are added). In <code>{0}, {1}</code> the number picks the argument after the format string.']),
+H('Precedence and associativity')+T([['1','<code>x++  x--</code>'],['2','unary: <code>+ - ! ++x --x (type)</code>'],['3','<code>* / %</code>'],['4','<code>+ -</code>'],['5','<code>&lt;&lt; &gt;&gt;</code> (shift)'],['6','<code>&lt; &gt; &lt;= &gt;=</code>'],['7','<code>== !=</code>'],['8','<code>&amp;&amp;</code>'],['9','<code>||</code>'],['10','<code>?:</code>'],['11','assignment <code>= += -= ...</code>']])+U(['Higher rows are evaluated first. Parentheses change the order: <code>2 + 3 * 4</code> = 14, <code>(2 + 3) * 4</code> = 20.','Same precedence: left-associative operators go left to right (<code>13 / 5 / 2</code> = 1). Assignment and ?: are right-associative (<code>x = y = z</code> is <code>x = (y = z)</code>).']),
+H('Operand evaluation (short-circuit)')+U(['Operands are evaluated left to right.','<code>&amp;&amp;</code>: if the left side is false, the right side is skipped. <code>||</code>: if the left side is true, the right side is skipped. <code>?:</code>: only the chosen expression is evaluated.'])
+];
+L[3].sen=['Arithmetic: + - * / %. int / int = int (5/2 = 2), 5 % 2 = 1, (double)5 / 2 = 2.5.','Operands should have the same type; otherwise one is implicitly converted.','<b>++x</b> (prefix) increases then uses; <b>x++</b> (postfix) uses then increases.','Assignment shorthands: <code>x += 10</code> is <code>x = x + 10</code>.','Comparison operators (== != &gt; &lt; &gt;= &lt;=) return a <b>bool</b>.','<b>&amp;&amp;</b> true only if both true; <b>||</b> false only if both false; <b>!</b> reverses.','Arithmetic expression gives a number; logical expression gives true / false.','<code>?:</code> (ternary): <code>cond ? a : b</code>.','Concatenation with +; escape sequences: \\n new line, \\t tab, \\\\ backslash, \\" quote.','<b>Precedence</b>: x++, unary and ++x, * / %, + -, shift, comparisons, == !=, &amp;&amp;, ||, ?:, assignment.','Associativity: most operators go left to right; assignment goes right to left.','Short-circuit: <code>&amp;&amp;</code> and <code>||</code> skip the right operand when the left side decides the result.'];
+L[3].d=[
+`الـ / بين int وint بيطلع int: يعني 5 / 2 = 2 مش 2.5 لأن الكسر بيتشال. والـ % بيدي الباقي: 5 % 2 = 1. لو عايز 2.5 حوّل واحد منهم لـ double: (double)x / y والتاني بيتحول تلقائي. القاعدة: لو النوعين مختلفين بيتحول واحد للتاني والناتج بنفس النوع.`,
+`الفرق في الترتيب: ++x (prefix) يزود الأول وبعدين يرجع القيمة الجديدة. x++ (postfix) يرجع القيمة القديمة وبعدين يزود. لو x = 5: y = ++x يخلي x = 6 وy = 6، أما y = x++ يخلي y = 5 وx = 6. والـ -- نفس الفكرة بس بينقص.`,
+`x += 10 اختصار لـ x = x + 10، وكذلك -= و*= و/= و%=. يعني لو x = 12 وكتبت x += 10 يبقى x = 22.`,
+`عمليات المقارنة ناتجها دايماً bool يا true يا false. خد بالك إن = للتخزين و== للمقارنة.`,
+`&& (AND) ناتجه true لو الاتنين true بس. || (OR) ناتجه false لو الاتنين false بس. و! بتعكس القيمة: !true = false. احفظها: AND لازم الاتنين، OR كفاية واحد.`,
+`الـ Expression إما حسابي (ناتجه رقم زي x + y) أو منطقي (ناتجه true/false زي x > y). في مثال علي وإبراهيم بنترجم الجملة لشرط: علي وصل بدري A <= 10، وعلي وصل بعد إبراهيم A > B، وعمرهم ما يتقابلوا X < B || Y < A (واحد خرج قبل ما التاني يوصل)، وإبراهيم قعد 5 ساعات على الأقل Y - B >= 5.`,
+`العامل الثلاثي ?: اختصار لـ if..else بيرجع قيمة: الشرط ? لو صح : لو غلط. مثلاً score >= 50 ? "Pass" : "Fail" لو score = 40 يرجع Fail.`,
+`العلامة + مع النصوص بتدمجهم من غير مسافات إلا لو حطيتها بنفسك، فـ "Result of" + x + "+" + y بتطلع Result of5+10. والبديل الـ placeholders: "{0} + {1}" بتتبدل بالـ arguments اللي بعد النص بالترتيب. لو كتبت نص من غير placeholders وحطيت arguments بعده، الزيادة بتتجاهل. وأي حاجة بين علامات تنصيص نص حرفي. الـ escape sequences: \\n سطر جديد، \\t مسافة tab، \\\\ باك سلاش، \\" علامة تنصيص.`,
+`الترتيب من الأعلى للأقل: ++ و-- بعد المتغير، ثم الـ unary والـ prefix، ثم * / %، ثم + -، ثم << >>، ثم المقارنة، ثم == !=، ثم &&، ثم ||، ثم ?:، وآخر حاجة التخصيص. دي أهم حاجة في أسئلة الامتحان، زي 2 + 3 * 4 = 14. ولو نفس المستوى بنمشي من الشمال لليمين (13 / 5 / 2 = 1) إلا التخصيص من اليمين للشمال. الأقواس تغير الترتيب. خطوات الحل: طبق ++ أولاً، ثم * / %، ثم + -، ثم الـ shift.`,
+`الـ && و|| بيشتغلوا بنظام short-circuit: لو الطرف الأيسر في && طلع false مبيقيمش الأيمن (لأن الناتج false أكيد)، ولو الأيسر في || طلع true مبيقيمش الأيمن. يعني لو الأيمن فيه ++x مش هيتنفذ. نفس الفكرة في ?: بتنفذ التعبير المختار بس.`
+];
+L[4].en=[
+H('Branching')+U(['When an algorithm chooses between two or more actions, it is called <b>branching</b>.','C# has three branching statements: <code>if</code>, <code>if..else</code> and <code>switch</code>.']),
+H('The if statement')+C(`int score = int.Parse(Console.ReadLine());
+
+if (score >= 50)
+{
+    Console.WriteLine("Pass");
+}
+
+Console.WriteLine("End of program");`)+U(['The block runs <b>only if the condition is true</b>; otherwise it is skipped and execution continues after the if.','Score 90 prints Pass then End of program. Score 30 prints only End of program.','Without braces, only the <b>first statement</b> after the if belongs to it.']),
+H('The if..else statement')+C(`if (score >= 50)
+{
+    Console.WriteLine("Pass");
+}
+else
+{
+    Console.WriteLine("Fail");
+}`)+U(['The if part runs when the condition is true, the else part when it is false. A program can <b>never execute both</b>. After either one, execution continues with the next statement.']),
+H('Nested if statements')+U(['It is always legal to put an if or if..else inside another if or if..else.','Example: a program that takes a score and prints the grade, written as separate if statements with <code>&amp;&amp;</code> conditions:'])+C(`if (score >= 85)
+{
+    Console.WriteLine("Excellent");
+}
+
+if (score < 85 && score >= 75)
+{
+    Console.WriteLine("Very Good");
+}
+
+if (score < 75 && score >= 65)
+{
+    Console.WriteLine("Good");
+}
+
+if (score < 65 && score >= 50)
+{
+    Console.WriteLine("Pass");
+}
+
+if (score < 50)
+{
+    Console.WriteLine("Fail");
+}`)
+];
+L[4].sen=['<b>Branching</b>: choosing between actions. Statements: if, if..else, switch.','<b>if</b>: the block runs only if the condition is true; otherwise execution jumps to the statement after it.','The condition must be a Boolean expression.','Without braces only the first statement belongs to the if.','<b>if..else</b>: exactly one of the two branches runs, never both.','<b>Nested if</b>: an if or if..else inside another if or if..else.','Grade example: separate ifs, each with a condition like <code>score &lt; 85 &amp;&amp; score &gt;= 75</code>.'];
+L[4].d=[
+`الـ Branching يعني الخوارزمية تختار تعمل واحد من حاجتين أو أكتر. وفي C# عندنا تلات جمل: if وif..else وswitch.`,
+`الـ if بتنفذ الـ block بس لو الشرط true. لو false بتتخطاه وتكمل على الجملة اللي بعده. في المثال: لو score = 90 يطبع Pass وبعدها End of program، ولو 30 يطبع End of program بس. والشرط لازم يكون Boolean. وخد بالك لو شلت الأقواس {} بتاعة الـ if، أول جملة بعدها بس هي اللي تتبع الـ if، وأي جملة بعدها بتتنفذ في كل الأحوال.`,
+`الـ if..else فيها فرعين: لو true ينفذ الـ if وإلا الـ else. مستحيل الاتنين ينفذوا مع بعض، وبعد أي واحد منهم البرنامج بيكمل على اللي بعده. لو score = 30 يطبع Fail وبعدها End of program.`,
+`الـ nested if معناها تحط if أو if..else جوه if أو if..else تانية، وده مسموح دايماً في C#. المثال: برنامج ياخد الدرجة ويطبع التقدير. الطريقة اللي في المحاضرة إنك تكتب if مستقلة لكل تقدير بشرط مركب، زي score < 85 && score >= 75 للـ Very Good. مثال score = 70: الشرط الأول false، التاني false، التالت (70 < 75 && 70 >= 65) true فيطبع Good.`
+];
+
+/* ----- NMU Midterm 2025-2026 (past exam) ----- */
+const ex=(n,t,c,w,e,ar)=>Q('[NMU Midterm 2025-26 \u00b7 Q'+n+'] '+t,c,w,e||'',ar||'');
+const X_L1=[
+ex(6,'A ____ is a collection of instructions to perform a specific task.','Program','Hardware|Data|CPU','A program is a collection of instructions.'),
+ex(7,'In flowcharts, ____ is represented by a rectangle box.','a process','a decision|an input|an output','Rectangle = process, diamond = decision, parallelogram = input/output.'),
+ex(8,'An ____ is a set of steps used to complete a specific task.','algorithm','inter-compiler|interpreter|assembler'),
+ex(14,'Central Processing Unit (CPU) is a ____ component.','hardware','system program|operating system|application program')
+];
+const X_L2=[
+ex(1,'A single line comment starts with ____','//','%|#|\\\\','Single-line comment = //, multi-line = /* */.'),
+ex(5,'The ____ keyword can be used to define a variable to store a text in memory.','string','int|double|char','string stores text; char stores one character.'),
+ex(11,'The ____ method outputs data to the screen followed by a new line character.','Console.WriteLine','Console.Write|Console.Writelines|System.WriteLine'),
+ex(17,'____ is an invalid variable name in C#.','1stVar','FirstVariable|first_variable|First11','A name cannot start with a digit.','الاسم مينفعش يبدأ برقم.')
+];
+const X_L3=[
+ex(4,'In a variable of type int, the ____ bit holds the sign (0 for positive or 1 for negative).','leftmost','rightmost|middle|third'),
+ex(9,'A ____ variable can hold one of two values: true or false.','bool','float|ushort|decimal'),
+ex(13,'The size of a short variable is ____ byte(s).','2','1|3|4','short = 16 bits = 2 bytes.'),
+ex(20,'In C#, a char variable stores a character using ____ character encoding.','UTF-16','UTF-24|UTF-32|UTF-64')
+];
+const X_L4=[
+ex(2,'The ++ operator ____ the value of a variable.','increments','deletes|outputs|duplicates'),
+ex(15,'If x = 5 and y = 10 (both int), the value of the expression x == y will be ____','false','true|5|10','== compares; 5 is not equal to 10.'),
+ex(16,'The expression x += 10 is equivalent to ____','x = x + 10','x = 10|x + 1 = 10|x = 11'),
+Object.assign(ex(18,'The ____ operator returns true only if both of its operands are true.','&&','++|@@|%','&& = AND, || = OR.'),{}),
+];
+X_L4[3].o[2]='||';
+const MS=`using System;\nclass Program\n{\n    static void Main()\n    {\n        Console.Write("Enter student score: ");\n        double score = double.Parse(Console.ReadLine());\n        if (score >= 60)\n        {\n            Console.WriteLine("Pass");\n        }\n        else\n        {\n            Console.WriteLine("Fail");\n        }\n    }\n}`;
+const X_L5=[
+ex(12,'An if statement specifies a statement (or a block) that should execute if the condition is ____','true','false|empty|zero'),
+Q('[NMU Midterm 2025-26 \u00b7 Q19] What is the output of executing the following code snippet?','Sorry Bye','Ok Bye|Ok Sorry|Bye','x >= 30 is false, so the else part prints "Sorry ", then "Bye" is always printed.','',`int x = 10, y = 30;\nif (x >= 30) Console.Write("Ok "); else Console.Write("Sorry ");\nConsole.Write("Bye");`),
+Q('[NMU Midterm 2025-26 \u00b7 Part 2] Program: output "Pass" if the score is 60 or above, otherwise "Fail". Which condition must the if use?','score >= 60','score > 60|score <= 60|score == 60','60 itself must give Pass, so the operator is >=.','لازم >= عشان 60 نفسها تطلع Pass.',MS),
+Q('[NMU Midterm 2025-26 \u00b7 Part 2] What does the model solution print when the user enters 59?','Fail','Pass|Nothing|Error','59 >= 60 is false, so the else part runs.','',MS),
+Q('[NMU Midterm 2025-26 \u00b7 Part 2] What does the model solution print when the user enters 60?','Pass','Fail|Nothing|Error','60 >= 60 is true.','',MS)
+];
+/* switch questions from the exam: outside the lecture 5 scope (pages 1-13), kept in the comprehensive quiz only */
+const X_SW=[
+ex(3,'The ____ statement is used within a switch statement at the end of each case section to prevent execution from falling through to subsequent case sections.','break','stop|default|prevent'),
+ex(10,'The ____ case in a switch statement specifies the statement(s) to execute when the expression does not match any case.','default','execution|else|specifier')
+];
+L[0].qs=[...L[0].qs,...X_L1];L[1].qs=[...L[1].qs,...X_L2];L[2].qs=[...L[2].qs,...X_L3];L[3].qs=[...L[3].qs,...X_L4];L[4].qs=[...L[4].qs,...X_L5];
+ALL=[...L.filter(l=>l.qs).flatMap(l=>l.qs),...V,...V3,...X_SW];
+
+const I={en:{pick:'Pick a lecture. Each one has the lecture, a quiz and a summary.',soon:'Coming soon',all:'Comprehensive quiz',allS:n=>`All lectures, ${n} questions so far`,back:'All lectures',tab:['Lecture.cs','Quiz.cs','Summary.md'],det:'Detailed explanation (شرح مفصل)',hide:'Hide explanation',q:(i,n,s)=>`Question ${i} of ${n}  |  Correct: ${s}`,ok:'Correct',no:'Wrong',sol:'Solution',ca:'Correct answer',next:'Next question',res:'See result',again:'Run again',lec:'Lecture',sumT:'Most likely midterm points',allD:n=>`${n} questions from all lectures (1 to 5, lecture 5 up to nested if) in random order, including changed versions of the exercise questions and the full NMU Midterm 2025-26 exam.`},
+ar:{pick:'اختار المحاضرة، وجواها: الشرح، كويز، وملخص.',soon:'هتتضاف قريباً',all:'كويز شامل',allS:n=>`كل المحاضرات، ${n} سؤال حالياً`,back:'كل المحاضرات',tab:['المحاضرة','كويز','ملخص'],det:'شرح مفصل',hide:'إخفاء الشرح',q:(i,n,s)=>`سؤال ${i} من ${n}  |  الصح: ${s}`,ok:'إجابة صحيحة',no:'إجابة خاطئة',sol:'الحل',ca:'الإجابة الصحيحة',next:'السؤال التالي',res:'النتيجة',again:'إعادة الكويز',lec:'المحاضرة',sumT:'أهم المعلومات المتوقعة في الميدترم',allD:n=>`${n} سؤال من كل المحاضرات (1 لـ 5، والمحاضرة 5 لحد nested if) بترتيب عشوائي، فيها نسخ متغيرة من أسئلة التمارين وكل أسئلة امتحان NMU Midterm 2025-26.`}};
+const R=document.documentElement,M=$("#m"),go=h=>location.hash=h,lg=()=>R.dataset.lang,tx=()=>I[lg()];
+
+/* ---------- quiz engine ---------- */
+function quiz(qs,shuf){
+ const t=tx(),en=lg()=="en";
+ let a=qs.map(x=>({...x,o:sh(x.o.map((u,i)=>[u,i==0]))})),i=0,s=0;if(shuf)a=sh(a);
+ const el=$("#qz"),show=()=>{
+  if(i>=a.length){const p=Math.round(s/a.length*100);
+   el.innerHTML=`<div class=en>${C(`$ dotnet build\n${p>=60?"Build succeeded.":"Build failed."}\nScore: ${s}/${a.length} (${p}%)`,1)}</div><button class=pb id=ag>${t.again}</button>`;$("#ag").onclick=()=>quiz(qs,shuf);return}
+  const x=a[i];let d=0;
+  el.innerHTML=`<p class=mut>${t.q(i+1,a.length,s)}</p><div class=bar><u style="width:${i/a.length*100}%"></u></div><div class=en><p class=qt>${E(x.t)}</p>${x.k?C(x.k,0,x.st):""}${x.o.map((o,j)=>`<button class=o data-j=${j}>${E(o[0])}</button>`).join("")}</div><div id=fb></div>`;
+  el.querySelectorAll(".o").forEach(b=>b.onclick=()=>{
+   if(d)return;d=1;const j=+b.dataset.j,ok=x.o[j][1];if(ok)s++;
+   el.querySelectorAll(".o").forEach((c,k)=>{c.disabled=true;if(x.o[k][1])c.classList.add("ok");else if(k==j)c.classList.add("no")});
+   $("#fb").innerHTML=`<details${ok?"":" open"}><summary>${ok?t.ok:t.no} &ndash; ${t.sol}</summary><p class=en>${t.ca}: <code>${E(x.o.find(o=>o[1])[0])}</code></p>${(en?x.ee:x.e)?`<p${en?" class=en":""}>${en?x.ee:x.e}</p>`:""}</details><button class=pb id=nx>${i+1<a.length?t.next:t.res}</button>`;
+   $("#nx").onclick=()=>{i++;show()};$("#nx").scrollIntoView({block:"nearest"});
+  })
+ };show()
+}
+
+/* ---------- router ---------- */
+const secs=i=>lg()=="en"||!L[i].lec?L[i].en:L[i].lec.split("<h3>").slice(1).map(s=>"<h3>"+s);
+function render(){
+ const t=tx(),h=location.hash.slice(1),m=h.match(/^l(\d)(?:-(lec|quiz|sum))?$/);scrollTo(0,0);
+ R.lang=lg();R.dir=lg()=="ar"?"rtl":"ltr";
+ document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.l==lg()));
+ const bk=`<button class=back id=bk>&lt; ${t.back}</button>`;
+ if(h=="all"){
+  M.innerHTML=`${bk}<h2>${t.all}</h2><p class=mut>${t.allD(ALL.length)}</p><div id=qz></div>`;
+  $("#bk").onclick=()=>go("");quiz(ALL,1);return}
+ if(m&&L[m[1]-1]&&L[m[1]-1].qs){
+  const i=m[1]-1,l=L[i],k=m[2]||"lec";
+  M.innerHTML=`${bk}<h2>${t.lec} ${l.n} &ndash; ${l.t}</h2><div class=tabs>${["lec","quiz","sum"].map((x,j)=>`<button data-t=${x} class="${x==k?"on":""}">${t.tab[j]}</button>`).join("")}</div><div id=bd></div>`;
+  $("#bk").onclick=()=>go("");M.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go("l"+l.n+"-"+b.dataset.t));
+  const bd=$("#bd");
+  if(k=="lec"){
+   bd.innerHTML=secs(i).map((s,j)=>`<section class=card>${s}<button class=dt>${t.det}</button><div class=dbox hidden>${l.d[j]}</div></section>`).join("");
+   bd.querySelectorAll(".dt").forEach(b=>b.onclick=()=>{const x=b.nextElementSibling;x.hidden=!x.hidden;b.textContent=x.hidden?t.det:t.hide})}
+  else if(k=="sum")bd.innerHTML=`<h3>${t.sumT}</h3>${U(lg()=="en"||!l.sum?l.sen:l.sum).replace("<ul>","<ul class=sm>")}`;
+  else{bd.innerHTML="<div id=qz></div>";quiz(l.qs,0)}
+  return}
+ M.innerHTML=`<div class=hero><span class=g>// Structure Programming</span>
+<span class=k>using</span> <span class=t>Midterm</span>;
+<span class=t>Console</span>.WriteLine(<span class=s>"Ready."</span>);<u></u></div><p class=mut>${t.pick}</p>`+L.map(l=>`<button class=row ${l.qs?`data-h=l${l.n}`:"disabled"}><i>L${l.n}.cs</i><span><b>${l.qs?l.t:t.lec+" "+l.n}</b><br><small>${l.qs?(lg()=="en"||!l.s?l.se:l.s):t.soon}</small></span></button>`).join("")+`<button class=row data-h=all><i>All.cs</i><span><b>${t.all}</b><br><small>${t.allS(ALL.length)}</small></span></button>`;
+ M.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>go(b.dataset.h));
+}
+R.dataset.lang="en";
+R.dataset.theme=matchMedia("(prefers-color-scheme:light)").matches?"light":"dark";
+$("#th").onclick=()=>R.dataset.theme=R.dataset.theme=="dark"?"light":"dark";
+document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{R.dataset.lang=b.dataset.l;render()});
+addEventListener("hashchange",render);render();
+</script>
+</body>
+</html>
