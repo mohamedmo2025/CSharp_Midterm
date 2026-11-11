@@ -4,14 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>C# Structure Programming – Midterm</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
 :root{--bg:#171923;--c:#1f2230;--ink:#dde2f0;--mut:#8791ad;--ac:#4fc1ff;--k:#c586c0;--s:#ce9178;--g:#6a9955;--ok:#4ec9b0;--no:#f48771;--ln:#343950;--code:#0f1118;--mono:"JetBrains Mono",Consolas,"Cascadia Code",monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
 :root[data-theme=light]{--bg:#f2f4fa;--c:#fff;--ink:#1f2335;--mut:#66708a;--ac:#0b6bcb;--k:#8a2fb3;--s:#b0512a;--g:#2e7d32;--ok:#0a7d63;--no:#c62828;--ln:#d6dbe8;--code:#1b1e2b;color-scheme:light}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
 *{box-sizing:border-box}
 body{margin:0;font:400 16px/1.8 Cairo,system-ui,sans-serif;background:var(--bg) radial-gradient(var(--ln) 1px,transparent 1px) 0 0/24px 24px;color:var(--ink)}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--c);z-index:10}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--c);z-index:10}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;direction:ltr;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--c);border-bottom:1px solid var(--ln)}
 header b{font:700 15px var(--mono);color:var(--ac)}header i{color:var(--k);font-style:normal}
 header div{display:flex;gap:8px}
@@ -73,7 +72,8 @@ li{margin:4px 0}
 </head>
 <body>
 <header><b><i>&lt;/&gt;</i> C#.Midterm</b><div><span class="seg"><button data-l="en">EN</button><button data-l="ar">ع</button></span><button id="th" aria-label="Theme">◐</button></div></header>
-<main id="m"></main>
+<main id="m"><div style="padding:24px;text-align:center;line-height:2"><p><b>Loading...</b></p><p>لو الصفحة دي مش بتتحمل: الملف اتفتح في معاينة (Preview) من غير JavaScript.<br>افتحه بـ <b>Safari</b> أو <b>Chrome</b>: اضغط Share ثم Open in Safari، أو احفظه في Files وافتحه من المتصفح.</p></div><noscript><p style="text-align:center">JavaScript is disabled. Please enable it or open this file in Safari / Chrome.</p></noscript></main>
+<script>window.onerror=function(m,u,l){var e=document.getElementById("m");if(e)e.insertAdjacentHTML("afterbegin","<pre style='white-space:pre-wrap;color:#f48771'>Error: "+m+" (line "+l+")</pre>")}</script>
 <script>
 const $=s=>document.querySelector(s),sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
 const E=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -570,33 +570,38 @@ ar:{pick:'اختار المحاضرة، وجواها: الشرح، كويز، و
 const R=document.documentElement,M=$("#m"),go=h=>location.hash=h,lg=()=>R.dataset.lang,tx=()=>I[lg()];
 
 /* ---------- quiz engine ---------- */
-function quiz(qs,shuf){
- const t=tx(),en=lg()=="en";
- let a=qs.map(x=>({...x,o:sh(x.o.map((u,i)=>[u,i==0]))})),i=0,s=0;if(shuf)a=sh(a);
- const el=$("#qz"),show=()=>{
-  if(i>=a.length){const p=Math.round(s/a.length*100);
-   el.innerHTML=`<div class=en>${C(`$ dotnet build\n${p>=60?"Build succeeded.":"Build failed."}\nScore: ${s}/${a.length} (${p}%)`,1)}</div><button class=pb id=ag>${t.again}</button>`;$("#ag").onclick=()=>quiz(qs,shuf);return}
-  const x=a[i];let d=0;
-  el.innerHTML=`<p class=mut>${t.q(i+1,a.length,s)}</p><div class=bar><u style="width:${i/a.length*100}%"></u></div><div class=en><p class=qt>${E(x.t)}</p>${x.k?C(x.k,0,x.st):""}${x.o.map((o,j)=>`<button class=o data-j=${j}>${E(o[0])}</button>`).join("")}</div><div id=fb></div>`;
-  el.querySelectorAll(".o").forEach(b=>b.onclick=()=>{
-   if(d)return;d=1;const j=+b.dataset.j,ok=x.o[j][1];if(ok)s++;
+let ST=null;
+function quiz(qs,key,keep){
+ const el=$("#qz");
+ /* keep=true (language switch): continue the same quiz state; otherwise start a fresh random one */
+ if(!(keep&&ST&&ST.key==key&&ST.qs===qs))
+  ST={key,qs,a:sh(qs.map(x=>({...x,o:sh(x.o.map((u,i)=>[u,i==0]))}))),i:0,s:0,p:null};
+ const S=ST,a=S.a,show=()=>{
+  const t=tx(),en=lg()=="en";
+  if(S.i>=a.length){const p=Math.round(S.s/a.length*100);
+   el.innerHTML=`<div class=en>${C(`$ dotnet build\n${p>=60?"Build succeeded.":"Build failed."}\nScore: ${S.s}/${a.length} (${p}%)`,1)}</div><button class=pb id=ag>${t.again}</button>`;$("#ag").onclick=()=>{ST=null;quiz(qs,key,0)};return}
+  const x=a[S.i],sc=S.s-(S.p!=null&&x.o[S.p][1]?1:0);
+  el.innerHTML=`<p class=mut>${t.q(S.i+1,a.length,sc)}</p><div class=bar><u style="width:${S.i/a.length*100}%"></u></div><div class=en><p class=qt>${E(x.t)}</p>${x.k?C(x.k,0,x.st):""}${x.o.map((o,j)=>`<button class=o data-j=${j}>${E(o[0])}</button>`).join("")}</div><div id=fb></div>`;
+  const fb=()=>{const j=S.p,ok=x.o[j][1];
    el.querySelectorAll(".o").forEach((c,k)=>{c.disabled=true;if(x.o[k][1])c.classList.add("ok");else if(k==j)c.classList.add("no")});
-   $("#fb").innerHTML=`<details${ok?"":" open"}><summary>${ok?t.ok:t.no} &ndash; ${t.sol}</summary><p class=en>${t.ca}: <code>${E(x.o.find(o=>o[1])[0])}</code></p>${(en?x.ee:x.e)?`<p${en?" class=en":""}>${en?x.ee:x.e}</p>`:""}</details><button class=pb id=nx>${i+1<a.length?t.next:t.res}</button>`;
-   $("#nx").onclick=()=>{i++;show()};$("#nx").scrollIntoView({block:"nearest"});
-  })
+   $("#fb").innerHTML=`<details${ok?"":" open"}><summary>${ok?t.ok:t.no} &ndash; ${t.sol}</summary><p class=en>${t.ca}: <code>${E(x.o.find(o=>o[1])[0])}</code></p>${(en?x.ee:x.e)?`<p${en?" class=en":""}>${en?x.ee:x.e}</p>`:""}</details><button class=pb id=nx>${S.i+1<a.length?t.next:t.res}</button>`;
+   $("#nx").onclick=()=>{S.i++;S.p=null;show()}};
+  el.querySelectorAll(".o").forEach(b=>b.onclick=()=>{
+   if(S.p!=null)return;S.p=+b.dataset.j;if(x.o[S.p][1])S.s++;fb();$("#nx").scrollIntoView({block:"nearest"})});
+  if(S.p!=null)fb()
  };show()
 }
 
 /* ---------- router ---------- */
 const secs=i=>lg()=="en"||!L[i].lec?L[i].en:L[i].lec.split("<h3>").slice(1).map(s=>"<h3>"+s);
-function render(){
- const t=tx(),h=location.hash.slice(1),m=h.match(/^l(\d)(?:-(lec|quiz|sum))?$/);scrollTo(0,0);
+function render(keep){
+ const t=tx(),h=location.hash.slice(1),m=h.match(/^l(\d)(?:-(lec|quiz|sum))?$/);if(!keep)scrollTo(0,0);
  R.lang=lg();R.dir=lg()=="ar"?"rtl":"ltr";
  document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.l==lg()));
  const bk=`<button class=back id=bk>&lt; ${t.back}</button>`;
  if(h=="all"){
   M.innerHTML=`${bk}<h2>${t.all}</h2><p class=mut>${t.allD(ALL.length)}</p><div id=qz></div>`;
-  $("#bk").onclick=()=>go("");quiz(ALL,1);return}
+  $("#bk").onclick=()=>go("");quiz(ALL,"all",keep);return}
  if(m&&L[m[1]-1]&&L[m[1]-1].qs){
   const i=m[1]-1,l=L[i],k=m[2]||"lec";
   M.innerHTML=`${bk}<h2>${t.lec} ${l.n} &ndash; ${l.t}</h2><div class=tabs>${["lec","quiz","sum"].map((x,j)=>`<button data-t=${x} class="${x==k?"on":""}">${t.tab[j]}</button>`).join("")}</div><div id=bd></div>`;
@@ -606,7 +611,7 @@ function render(){
    bd.innerHTML=secs(i).map((s,j)=>`<section class=card>${s}<button class=dt>${t.det}</button><div class=dbox hidden>${l.d[j]}</div></section>`).join("");
    bd.querySelectorAll(".dt").forEach(b=>b.onclick=()=>{const x=b.nextElementSibling;x.hidden=!x.hidden;b.textContent=x.hidden?t.det:t.hide})}
   else if(k=="sum")bd.innerHTML=`<h3>${t.sumT}</h3>${U(lg()=="en"||!l.sum?l.sen:l.sum).replace("<ul>","<ul class=sm>")}`;
-  else{bd.innerHTML="<div id=qz></div>";quiz(l.qs,0)}
+  else{bd.innerHTML="<div id=qz></div>";quiz(l.qs,h,keep)}
   return}
  M.innerHTML=`<div class=hero><span class=g>// Structure Programming</span>
 <span class=k>using</span> <span class=t>Midterm</span>;
@@ -616,8 +621,8 @@ function render(){
 R.dataset.lang="en";
 R.dataset.theme=matchMedia("(prefers-color-scheme:light)").matches?"light":"dark";
 $("#th").onclick=()=>R.dataset.theme=R.dataset.theme=="dark"?"light":"dark";
-document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{R.dataset.lang=b.dataset.l;render()});
-addEventListener("hashchange",render);render();
+document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{R.dataset.lang=b.dataset.l;render(true)});
+addEventListener("hashchange",()=>render());render();
 </script>
 </body>
 </html>
